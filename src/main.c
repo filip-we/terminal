@@ -22,10 +22,13 @@ int main (void)
     uint32_t led_pin = PICO_DEFAULT_LED_PIN;
     gpio_init(led_pin);
     gpio_set_dir(led_pin, GPIO_OUT);
+    gpio_put(led_pin, 0);
+
+    // Allow the screen to wake up after power off.
+    sleep_ms(100);
 
     screen_init();
     display_test();
-
     while (true)
     {
         gpio_put(led_pin, true);
