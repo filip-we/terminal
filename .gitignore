@@ -33,5 +33,7 @@
 
 # Own stuff
 build/*
+lib/
 
 py_venv/
+

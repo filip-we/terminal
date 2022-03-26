@@ -14,8 +14,16 @@
 
 // Own code
 #include "screen_interface.c"
+#include "IBM_VGA_8x16.h"
 
-static void display_test();
+struct RGB {
+    unsigned int red    : 6;
+    unsigned int green  : 5;
+    unsigned int blue   : 6;
+};
+
+static void fill_display(struct RGB *rgb);
+static void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos);
 
 int main (void)
 {
@@ -27,8 +35,18 @@ int main (void)
     // Allow the screen to wake up after power off.
     sleep_ms(100);
 
+    struct RGB bg_color;
+    bg_color.red = 0x01;
+    bg_color.green = 0x01;
+    bg_color.blue = 0x0F;
+
     screen_init();
-    display_test();
+    fill_display(&bg_color);
+    for (int i = 0; i < 30; i++)
+    {
+        print_char(IBM_VGA_8x16, (65 + i), i * 9, 10);
+    }
+
     while (true)
     {
         gpio_put(led_pin, true);
@@ -39,40 +57,69 @@ int main (void)
     return 0;
 }
 
-static void display_test()
+static void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos)
 {
     screen_write_command(SCREEN_COLUMN_ADDR_SET);
-    screen_write_data(0x00);
-    screen_write_data(0x00);
+    screen_write_data(x_pos >> 8);
+    screen_write_data(x_pos & 0xFF);
+    screen_write_data((x_pos + 7) >> 8);
+    screen_write_data((x_pos + 7) & 0xFF);
 
+    screen_write_command(SCREEN_PAGE_ADDR_SET);
+    screen_write_data(y_pos >> 8);
+    screen_write_data(y_pos & 0xFF);
+    screen_write_data((y_pos + 31) >> 8);
+    screen_write_data((y_pos + 31) & 0xFF);
+
+    screen_write_command(SCREEN_MEMORY_WRITE);
+    struct RGB color;
+    color.red = 0;
+    color.green = 0b1111;
+    color.blue = 0b11111;
+
+    char row;
+    for (uint16_t y = 0; y < 16 ; y++)
+    {
+        row = font_map[char_nr * 16 + y];
+        for (uint16_t x = 0; x < 8; x++)
+        {
+            if (row & 128)
+            {
+                screen_write_data(0xFF);
+                screen_write_data(0xFF);
+            }
+            else
+            {
+                screen_write_data((color.red << 3) + (color.green >> 5));
+                screen_write_data((color.blue >> 3) + ((color.green << 3) & 0xFF));
+            }
+            row = row << 1;
+        }
+    }
+}
+
+static void fill_display(struct RGB *rgb)
+{
+    screen_write_command(SCREEN_ORIENTATION ? SCREEN_PAGE_ADDR_SET : SCREEN_COLUMN_ADDR_SET);
+    screen_write_data(0);
+    screen_write_data(0);
+    screen_write_data(SCREEN_WIDTH >> 8);
+    screen_write_data(SCREEN_WIDTH & 0xFF);
+
+    screen_write_command(SCREEN_ORIENTATION ? SCREEN_COLUMN_ADDR_SET : SCREEN_PAGE_ADDR_SET);
+    screen_write_data(0);
+    screen_write_data(0);
     screen_write_data(SCREEN_HEIGHT >> 8);
     screen_write_data(SCREEN_HEIGHT & 0xFF);
 
-    char red, green, blue;
-    blue = 0;
-    green = 0;
-    for (char r = 0; r < SCREEN_WIDTH; r++)
+    screen_write_command(SCREEN_MEMORY_WRITE);
+    for (uint32_t y = 0; y < SCREEN_HEIGHT; y++)
     {
-        screen_write_command(SCREEN_PAGE_ADDR_SET);
-        screen_write_data(r >> 8);
-        screen_write_data(r);
-
-        screen_write_data(SCREEN_WIDTH >> 8);
-        screen_write_data(SCREEN_WIDTH & 0xFF);
-
-        screen_write_command(SCREEN_MEMORY_WRITE);
-        red = 0;
-        for (char i = 0; i < SCREEN_WIDTH; i++)
+        for (uint32_t x = 0; x < SCREEN_WIDTH; x++)
         {
-            screen_write_data((red << 3) + (green >> 5)); // 6 bits red, 5 bits green, 6 bits blue.
-            screen_write_data((blue >> 3) + ((green << 3) & 0xFF));
-            red++;
-            if (red == 0x20){red = 0;}
-
-            green = ~((r + i)) & 0x1F;
+            screen_write_data((rgb -> red << 3) + (rgb -> green >> 5));
+            screen_write_data((rgb -> blue >> 3) + ((rgb -> green << 3) & 0xFF));
         }
-        blue++;
-        if (blue == 0x20){red = 0;}
     }
 }
 

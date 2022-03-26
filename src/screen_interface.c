@@ -8,8 +8,9 @@
 #define SCREEN_CS   (SCREEN_PIN_START + 4 )
 #define SCREEN_DATA (SCREEN_PIN_START + 5 )
 
-#define SCREEN_WIDTH 240
-#define SCREEN_HEIGHT 320
+#define SCREEN_WIDTH 320
+#define SCREEN_HEIGHT 240
+#define SCREEN_ORIENTATION 1
 
 static void screen_init();
 static void set_screen_data(char data);
@@ -82,8 +83,9 @@ static void screen_init()
     screen_write_command(SCREEN_VCOM_CTL_2);
     screen_write_data(0xBE);
 
+    // RowDir, ColDir, Flip, VertRefrOrd, RGB-order, HoriRefrOrd, 00
     screen_write_command(SCREEN_MEMORY_ACCESS_CTL);
-    screen_write_data(0x88);
+    screen_write_data(0b11011100);
 
     screen_write_command(SCREEN_FRAME_RATE_CTL);
     screen_write_data(0x00);

@@ -14,3 +14,8 @@ Started to look for fonts. It's a whole new world opening... There are many old 
 Since i could not wrap my mind around how to convert a .ttf file I settled on using some random font that was already in picture form. Reading a picture with Python was rather straight forward. Then i needed to understand that the pixel list I then got was listing the pixels in the same order as one would read a book. This caused for some quirky offsets in order to read out one single character. I wanted the characters read one by one so all the data for one characted could be continuosly one after the other.
 
 When that was in place I could make a script that would read one character from my binary-dump-file and print it to the terminal, just so I was sure all was working as intended.
+
+## 2022-03-26 Including a binary file in your C-program
+Now for the task of including a binary file in your C-program. I am familiar on how that works in (older) Assembly: you just have line saying "dear compiler, put there bytes here". Simple to know whats going on at least. I searched for a similar approach for C but ended up converting the data to a C-array instead since that seems to be the go-to method. To convert the binary file to a variable parasable by C there is this little command called `xxd` which seems to be included in Debian. 
+
+Now I can print a character on the screen! It required a lot of tweaking to understan what was going on with the display. Now it can print one character with only a single set of calls to tell the display what area is being used. I also discovered a beautiful collection of old pixel-fonts ready to be [imported directly in C](https://github.com/spacerace/romfont).

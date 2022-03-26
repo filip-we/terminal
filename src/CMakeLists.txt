@@ -19,6 +19,7 @@ target_sources(terminal PUBLIC
 
 target_include_directories(terminal PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}
+        ${CMAKE_CURRENT_LIST_DIR}/../lib/romfont/font-headers/
         )
 
 target_link_libraries(terminal PUBLIC

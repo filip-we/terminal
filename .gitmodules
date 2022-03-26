@@ -1,0 +1,6 @@
+[submodule "lib/spacerace"]
+	path = lib/spacerace
+	url = git@github.com:spacerace/romfont.git
+[submodule "lib/romfont"]
+	path = lib/romfont
+	url = git@github.com:spacerace/romfont.git
