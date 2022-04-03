@@ -15,6 +15,7 @@ add_executable(terminal)
 
 target_sources(terminal PUBLIC
         ${CMAKE_CURRENT_LIST_DIR}/main.c
+        ${CMAKE_CURRENT_LIST_DIR}/usb_keyboard.c
         )
 
 target_include_directories(terminal PUBLIC

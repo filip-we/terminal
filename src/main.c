@@ -7,14 +7,12 @@
 //#include <stdio.h>
 
 #include "pico/stdlib.h"
-
-// TinyUSB imports
 #include "bsp/board.h"
 #include "tusb.h"
 
-// Own code
 #include "screen_interface.c"
 #include "IBM_VGA_8x16.h"
+
 
 struct RGB {
     unsigned int red    : 6;
@@ -42,9 +40,12 @@ int main (void)
 
     screen_init();
     fill_display(&bg_color);
-    for (int i = 0; i < 30; i++)
+    for (int y = 0; y < 16; y++)
     {
-        print_char(IBM_VGA_8x16, (65 + i), i * 9, 10);
+        for (int x = 0; x < 16; x++)
+        {
+            print_char(IBM_VGA_8x16, (x + y * 16), x * 8, y * 16);
+        }
     }
 
     while (true)
