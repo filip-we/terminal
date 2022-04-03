@@ -30,5 +30,6 @@ target_link_libraries(terminal PUBLIC
     )
 
 pico_sdk_init()
-
 pico_add_extra_outputs(terminal)
+pico_enable_stdio_uart(terminal 1)
+pico_enable_stdio_usb(terminal 0)

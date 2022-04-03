@@ -25,6 +25,9 @@ static void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t 
 
 int main (void)
 {
+    uint32_t time = 0;
+    stdio_init_all();
+
     uint32_t led_pin = PICO_DEFAULT_LED_PIN;
     gpio_init(led_pin);
     gpio_set_dir(led_pin, GPIO_OUT);
@@ -48,12 +51,26 @@ int main (void)
         }
     }
 
+    printf("TinyUSB-Init\r\n");
+    tusb_init();
+    gpio_put(led_pin, true);
+    printf("Loop\r\n");
     while (true)
     {
-        gpio_put(led_pin, true);
-        sleep_ms(500);
-        gpio_put(led_pin, false);
-        sleep_ms(500);
+        printf("Host-task\r\n");
+        tuh_task();
+
+        time ++;
+        if (time > 1000)
+        {
+            printf("LED off!\r\n");
+            time = 0;
+            gpio_put(led_pin, true);
+        }
+        else if (time > 500)
+        {
+            gpio_put(led_pin, false);
+        }
     }
     return 0;
 }
