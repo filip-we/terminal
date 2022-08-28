@@ -1,12 +1,12 @@
 #include "screen_interface.h"
 
-#define SCREEN_PIN_START  9
+#define SCREEN_PIN_START  6
 #define SCREEN_RST  (SCREEN_PIN_START     )
 #define SCREEN_RD   (SCREEN_PIN_START + 1 )
 #define SCREEN_WR   (SCREEN_PIN_START + 2 )
 #define SCREEN_CD   (SCREEN_PIN_START + 3 )
 #define SCREEN_CS   (SCREEN_PIN_START + 4 )
-#define SCREEN_DATA (SCREEN_PIN_START + 5 )
+#define SCREEN_DATA 14
 
 #define SCREEN_WIDTH 320
 #define SCREEN_HEIGHT 240
@@ -19,7 +19,27 @@ static void screen_write_data(char data);
 
 static void screen_init()
 {
-    for (int i = SCREEN_PIN_START; i < SCREEN_DATA + 8; i++)
+    gpio_init(SCREEN_RST);
+    gpio_set_dir(SCREEN_RST, GPIO_OUT);
+    gpio_put(SCREEN_RST, 1);
+
+    gpio_init(SCREEN_RD);
+    gpio_set_dir(SCREEN_RD, GPIO_OUT);
+    gpio_put(SCREEN_RD, 1);
+
+    gpio_init(SCREEN_WR);
+    gpio_set_dir(SCREEN_WR, GPIO_OUT);
+    gpio_put(SCREEN_WR, 1);
+
+    gpio_init(SCREEN_CD);
+    gpio_set_dir(SCREEN_CD, GPIO_OUT);
+    gpio_put(SCREEN_CD, 1);
+
+    gpio_init(SCREEN_CS);
+    gpio_set_dir(SCREEN_CS, GPIO_OUT);
+    gpio_put(SCREEN_CS, 1);
+
+    for (int i = SCREEN_DATA; i < SCREEN_DATA + 8; i++)
     {
         gpio_init(i);
         gpio_set_dir(i, GPIO_OUT);
