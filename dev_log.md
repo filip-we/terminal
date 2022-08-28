@@ -21,7 +21,9 @@ Now for the task of including a binary file in your C-program. I am familiar on 
 Now I can print a character on the screen! It required a lot of tweaking to understan what was going on with the display. Now it can print one character with only a single set of calls to tell the display what area is being used. I also discovered a beautiful collection of old pixel-fonts ready to be [imported directly in C](https://github.com/spacerace/romfont).
 
 ## 2022-08-15
-- Document hardware.
-- Document debug prints from the Pico via the USB-to-serial-chip.
+Documented the hardware. Managed to setup debug prints from the Pico via the USB-to-serial-chip.
+
+## 2022-08-28
+Now the debug-prints where not working. I tried to connect to a Raspberry Pi 400 instead of the USB-serial-converter. After hours of debugging and trying all combinations of TX+RX pins with uart0 and uart1 I am pretty sure something is off with the Pico. I could only get STDIO working on GPIO12 and 13. Next step should be to get the SWD, Serial Wire Debug, which should be fairly simple on the Raspberry Pi 400.
 
 
