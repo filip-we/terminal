@@ -16,3 +16,6 @@
 1. The setup can be USB-powered by connecting the USB-to-serial-converter to a PC (or a USB-power-brick).
 2. The Pico can utilize debug-prints which can be read on a PC.
 
+
+## Alternative to serial-converter
+Connect the UART of the Pico to a Raspberry Pi 400 (or 4).
