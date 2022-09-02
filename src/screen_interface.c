@@ -1,21 +1,118 @@
 #include "screen_interface.h"
 
+#ifndef SCREEN_PIN_START
 #define SCREEN_PIN_START  6
+#endif
+#ifndef SCREEN_RST
 #define SCREEN_RST  (SCREEN_PIN_START     )
+#endif
+#ifndef SCREEN_RD
 #define SCREEN_RD   (SCREEN_PIN_START + 1 )
+#endif
+#ifndef SCREEN_WR
 #define SCREEN_WR   (SCREEN_PIN_START + 2 )
+#endif
+#ifndef SCREEN_CD
 #define SCREEN_CD   (SCREEN_PIN_START + 3 )
+#endif
+#ifndef SCREEN_CS
 #define SCREEN_CS   (SCREEN_PIN_START + 4 )
+#endif
+#ifndef SCREEN_DATA
 #define SCREEN_DATA 14
+#endif
 
+#ifndef SCREEN_WIDTH
 #define SCREEN_WIDTH 320
+#endif
+#ifndef SCREEN_HEIGHT
 #define SCREEN_HEIGHT 240
+#endif
+#ifndef SCREEN_ORIENTATION
 #define SCREEN_ORIENTATION 1
+#endif
 
+
+struct RGB {
+    unsigned int red    : 6;
+    unsigned int green  : 5;
+    unsigned int blue   : 6;
+};
+
+static void fill_display(struct RGB *rgb);
+static void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos);
 static void screen_init();
 static void set_screen_data(char data);
 static void screen_write_command(char cmd);
 static void screen_write_data(char data);
+
+static void fill_display(struct RGB *rgb)
+{
+    screen_write_command(SCREEN_ORIENTATION ? SCREEN_PAGE_ADDR_SET : SCREEN_COLUMN_ADDR_SET);
+    screen_write_data(0);
+    screen_write_data(0);
+    screen_write_data(SCREEN_WIDTH >> 8);
+    screen_write_data(SCREEN_WIDTH & 0xFF);
+
+    screen_write_command(SCREEN_ORIENTATION ? SCREEN_COLUMN_ADDR_SET : SCREEN_PAGE_ADDR_SET);
+    screen_write_data(0);
+    screen_write_data(0);
+    screen_write_data(SCREEN_HEIGHT >> 8);
+    screen_write_data(SCREEN_HEIGHT & 0xFF);
+
+    screen_write_command(SCREEN_MEMORY_WRITE);
+    for (uint32_t y = 0; y < SCREEN_HEIGHT; y++)
+    {
+        for (uint32_t x = 0; x < SCREEN_WIDTH; x++)
+        {
+            screen_write_data((rgb -> red << 3) + (rgb -> green >> 5));
+            screen_write_data((rgb -> blue >> 3) + ((rgb -> green << 3) & 0xFF));
+        }
+    }
+}
+
+
+static void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos)
+{
+    screen_write_command(SCREEN_COLUMN_ADDR_SET);
+    screen_write_data(x_pos >> 8);
+    screen_write_data(x_pos & 0xFF);
+    screen_write_data((x_pos + 7) >> 8);
+    screen_write_data((x_pos + 7) & 0xFF);
+
+    screen_write_command(SCREEN_PAGE_ADDR_SET);
+    screen_write_data(y_pos >> 8);
+    screen_write_data(y_pos & 0xFF);
+    screen_write_data((y_pos + 31) >> 8);
+    screen_write_data((y_pos + 31) & 0xFF);
+
+    screen_write_command(SCREEN_MEMORY_WRITE);
+    struct RGB color;
+    color.red = 0;
+    color.green = 0b1111;
+    color.blue = 0b11111;
+
+    char row;
+    for (uint16_t y = 0; y < 16 ; y++)
+    {
+        row = font_map[char_nr * 16 + y];
+        for (uint16_t x = 0; x < 8; x++)
+        {
+            if (row & 128)
+            {
+                screen_write_data(0xFF);
+                screen_write_data(0xFF);
+            }
+            else
+            {
+                screen_write_data((color.red << 3) + (color.green >> 5));
+                screen_write_data((color.blue >> 3) + ((color.green << 3) & 0xFF));
+            }
+            row = row << 1;
+        }
+    }
+}
+
 
 static void screen_init()
 {
@@ -140,6 +237,7 @@ static void screen_init()
     screen_write_command(SCREEN_DISPLAY_ON);
 }
 
+
 static void set_screen_data(char data)
 {
     for (int i = 0; i < 8; i++)
@@ -148,6 +246,7 @@ static void set_screen_data(char data)
     }
 }
 
+
 static void screen_write_command(char cmd)
 {
     gpio_put(SCREEN_CD, 0);
@@ -155,6 +254,7 @@ static void screen_write_command(char cmd)
     gpio_put(SCREEN_WR, 0);
     gpio_put(SCREEN_WR, 1);
 }
+
 
 static void screen_write_data(char data)
 {

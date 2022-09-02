@@ -11,11 +11,13 @@ void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* desc_re
 
 void tuh_hid_unmount_cb(uint8_t dev_addr, uint8_t instance)
 {
+    printf("HID device unmounted, address = %d, instance = %d is mounted\r\n", dev_addr, instance);
 }
 
 void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance,  uint8_t const* report, uint16_t len)
 {
     char buf[32];
+    printf("HID-report received.");
     hid_keyboard_report_t const* hid_report;
     hid_report = (hid_keyboard_report_t const*) report;
     for (uint8_t i = 0; i < 6; i++)
