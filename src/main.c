@@ -10,8 +10,7 @@
 #include "bsp/board.h"
 #include "tusb.h"
 
-#include "IBM_VGA_8x16.h"
-#include "hardware/screen_interface.c"
+#include "screen.c"
 
 static void start_communications();
 
@@ -32,27 +31,18 @@ int main (void)
     uint32_t time = 0;
     uint32_t led_pin = PICO_DEFAULT_LED_PIN;
 
-    struct RGB bg_color;
-    bg_color.red = 0x01;
-    bg_color.green = 0x10;
-    bg_color.blue = 0x0F;
-
     start_communications();
+    screen_init();
+
+    screen_display_char('A', 0, 0);
+    screen_display_char('B', 1, 0);
+    screen_display_char('C', 2, 0);
+    screen_display_char('D', 3, 0);
+    screen_update();
 
     gpio_init(led_pin);
     gpio_set_dir(led_pin, GPIO_OUT);
     gpio_put(led_pin, 0);
-
-    sleep_ms(100); // Allow the screen to wake up after power off.
-    screen_init();
-    fill_display(&bg_color);
-    for (int y = 0; y < 16; y++)
-    {
-        for (int x = 0; x < 16; x++)
-        {
-            print_char(IBM_VGA_8x16, (x + y * 16), x * 8, y * 16);
-        }
-    }
 
     printf("TinyUSB-Init\r\n");
     tusb_init();

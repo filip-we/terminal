@@ -1,47 +1,8 @@
 #include "screen_interface.h"
 
-#ifndef SCREEN_PIN_START
-#define SCREEN_PIN_START  6
-#endif
-#ifndef SCREEN_RST
-#define SCREEN_RST  (SCREEN_PIN_START     )
-#endif
-#ifndef SCREEN_RD
-#define SCREEN_RD   (SCREEN_PIN_START + 1 )
-#endif
-#ifndef SCREEN_WR
-#define SCREEN_WR   (SCREEN_PIN_START + 2 )
-#endif
-#ifndef SCREEN_CD
-#define SCREEN_CD   (SCREEN_PIN_START + 3 )
-#endif
-#ifndef SCREEN_CS
-#define SCREEN_CS   (SCREEN_PIN_START + 4 )
-#endif
-#ifndef SCREEN_DATA
-#define SCREEN_DATA 14
-#endif
-
-#ifndef SCREEN_WIDTH
-#define SCREEN_WIDTH 320
-#endif
-#ifndef SCREEN_HEIGHT
-#define SCREEN_HEIGHT 240
-#endif
-#ifndef SCREEN_ORIENTATION
-#define SCREEN_ORIENTATION 1
-#endif
-
-
-struct RGB {
-    unsigned int red    : 6;
-    unsigned int green  : 5;
-    unsigned int blue   : 6;
-};
-
 static void fill_display(struct RGB *rgb);
 static void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos);
-static void screen_init();
+static void screen_hw_init();
 static void set_screen_data(char data);
 static void screen_write_command(char cmd);
 static void screen_write_data(char data);
@@ -114,7 +75,7 @@ static void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t 
 }
 
 
-static void screen_init()
+static void screen_hw_init()
 {
     gpio_init(SCREEN_RST);
     gpio_set_dir(SCREEN_RST, GPIO_OUT);
