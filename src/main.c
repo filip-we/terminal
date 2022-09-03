@@ -4,6 +4,7 @@
  */
 
 #include "config.h"
+#include "usb_keyboard.h"
 
 #include "pico/stdlib.h"
 #include "bsp/board.h"
@@ -70,8 +71,19 @@ int main (void)
         else if (time == 300000)
         {
             time = 0;
-            printf("LED off!\r\n");
+            printf("LED off! %d, %d\r\n", kbd_buff_write, kbd_buff_read);
             gpio_put(led_pin, false);
+        }
+
+        if (kbd_buff_read != kbd_buff_write)
+        {
+            print_char(
+                IBM_VGA_8x16,
+                kbd_buff[kbd_buff_read],
+                (kbd_buff_read % 8) * 16,
+                18 * 16
+            );
+            kbd_buff_read++;
         }
     }
     return 0;
