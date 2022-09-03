@@ -59,21 +59,20 @@ int main (void)
     printf("Loop\r\n");
     while (true)
     {
-        //printf("Host-task\r\n");
         tuh_task();
 
-        //time ++;
-        //if (time > 1000)
-        //{
-        //    printf("LED on!\r\n");
-        //    time = 0;
-        //    gpio_put(led_pin, true);
-        //}
-        //else if (time > 500)
-        //{
-        //    gpio_put(led_pin, false);
-        //    printf("LED off!\r\n");
-        //}
+        time ++;
+        if (time == 200000)
+        {
+            printf("LED on!\r\n");
+            gpio_put(led_pin, true);
+        }
+        else if (time == 300000)
+        {
+            time = 0;
+            printf("LED off!\r\n");
+            gpio_put(led_pin, false);
+        }
     }
     return 0;
 }
