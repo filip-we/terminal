@@ -1,6 +1,6 @@
 #!/bin/bash
 rm -r build/*
-cmake -DCMAKE_BUILD_TYPE=debug -S src/. -B build/.
+cmake -DCMAKE_BUILD_TYPE=Release -S src/. -B build/.
 cd build
 make
 cd ..
