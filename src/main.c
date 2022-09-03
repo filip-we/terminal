@@ -4,14 +4,14 @@
  */
 
 #include "config.h"
-#include "usb_keyboard.h"
+#include "hardware/usb_keyboard.h"
 
 #include "pico/stdlib.h"
 #include "bsp/board.h"
 #include "tusb.h"
 
-#include "screen_interface.c"
 #include "IBM_VGA_8x16.h"
+#include "hardware/screen_interface.c"
 
 static void start_communications();
 
