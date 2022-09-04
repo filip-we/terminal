@@ -1,5 +1,6 @@
 #include "IBM_VGA_8x16.h"
 #include "hardware/screen_interface.h"
+#include "screen.h"
 
 #include "hardware/screen_interface.c"
 
@@ -8,18 +9,59 @@
 
 // These need to be changed if screen rotation is changed.
 #ifndef SCREEN_COLUMNS
-#define SCREEN_COLUMNS 20
+#define SCREEN_COLUMNS 15
 #endif
 #ifndef SCREEN_ROWS
-#define SCREEN_ROWS 15
+#define SCREEN_ROWS 20
+#endif
+#ifndef SCREEN_GRID_SIZE
+#define SCREEN_GRID_SIZE 300
 #endif
 
-char screen_buffer[SCREEN_COLUMNS][SCREEN_ROWS];
 
+char screen_buffer[255][SCREEN_COLUMNS];
 
-void screen_write_char(char ch, uint8_t col, uint8_t row)
+uint8_t screen_buff_scroll;
+
+struct Cursor {
+    uint8_t row;
+    uint8_t col;
+} cursor;
+
+void screen_write_char(char ch, uint8_t row, uint8_t col);
+void screen_display_test_image();
+void screen_set_bg_color(RGB *color);
+void screen_update();
+void screen_init();
+
+void advance_scrolling()
 {
-    screen_buffer[col][row] = ch;
+    // Clean next row.
+    memset(screen_buffer[screen_buff_scroll + SCREEN_ROWS], 0, sizeof(char) * SCREEN_COLUMNS);
+    screen_buff_scroll ++;
+
+}
+
+void screen_write_char(char ch, uint8_t row, uint8_t col)
+{
+    screen_buffer[screen_buff_scroll + row][col] = ch;
+}
+
+
+void screen_write_char_at_cursor(char ch)
+{
+    screen_buffer[screen_buff_scroll + cursor.row][cursor.col] = ch;
+    cursor.col ++;
+    if (cursor.col == SCREEN_COLUMNS)
+    {
+        cursor.col = 0;
+        cursor.row ++;
+        if (cursor.row == SCREEN_ROWS)
+        {
+            cursor.row = SCREEN_ROWS - 1;
+            advance_scrolling();
+        }
+    }
 }
 
 
@@ -50,7 +92,7 @@ void screen_update()
         for (int col = 0; col < SCREEN_COLUMNS; col++)
         {
             print_char(IBM_VGA_8x16,
-                screen_buffer[col][row],
+                screen_buffer[screen_buff_scroll + row][col],
                 col * FONT_WIDTH,
                 row * FONT_HEIGHT);
         }
@@ -63,4 +105,6 @@ void screen_init()
     sleep_ms(100); // Allow the screen to wake up after power off.
     screen_hw_init();
     fill_display(&bg_color);
+    screen_buff_scroll = 0;
+    screen_update();
 }
