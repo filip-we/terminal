@@ -34,10 +34,10 @@ int main (void)
     start_communications();
     screen_init();
 
-    screen_display_char('A', 0, 0);
-    screen_display_char('B', 1, 0);
-    screen_display_char('C', 2, 0);
-    screen_display_char('D', 3, 0);
+    screen_write_char('A', 0, 0);
+    screen_write_char('B', 1, 0);
+    screen_write_char('C', 2, 0);
+    screen_write_char('D', 3, 0);
     screen_update();
 
     gpio_init(led_pin);
@@ -53,12 +53,12 @@ int main (void)
         tuh_task();
 
         time ++;
-        if (time == 200000)
+        if (time == 100000)
         {
             printf("LED on!\r\n");
             gpio_put(led_pin, true);
         }
-        else if (time == 300000)
+        else if (time == 400000)
         {
             time = 0;
             printf("LED off! %d, %d\r\n", kbd_buff_write, kbd_buff_read);

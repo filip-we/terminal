@@ -71,10 +71,22 @@
 #endif
 
 
-struct RGB {
-    unsigned int red    : 6;
-    unsigned int green  : 5;
-    unsigned int blue   : 6;
+typedef struct rgb {
+    unsigned int red    : 5;
+    unsigned int green  : 6;
+    unsigned int blue   : 5;
+} RGB;
+
+RGB bg_color = {
+    .red = 0x00000,
+    .green = 0b000000,
+    .blue = 0b11111,
+};
+
+RGB fg_color = {
+    .red = 0b11111,
+    .green = 0b111111,
+    .blue = 0b11111,
 };
 
 #endif

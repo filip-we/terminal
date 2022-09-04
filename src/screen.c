@@ -17,7 +17,7 @@
 char screen_buffer[SCREEN_COLUMNS][SCREEN_ROWS];
 
 
-void screen_display_char(char ch, uint8_t col, uint8_t row)
+void screen_write_char(char ch, uint8_t col, uint8_t row)
 {
     screen_buffer[col][row] = ch;
 }
@@ -32,6 +32,14 @@ void screen_display_test_image()
             print_char(IBM_VGA_8x16, (x + y * 16), x * 8, y * 16);
         }
     }
+}
+
+
+void screen_set_bg_color(RGB *color)
+{
+    bg_color.red = color->red;
+    bg_color.blue = color->blue;
+    bg_color.green = color->green;
 }
 
 
@@ -52,11 +60,6 @@ void screen_update()
 
 void screen_init()
 {
-    struct RGB bg_color;
-    bg_color.red = 0x01;
-    bg_color.green = 0x10;
-    bg_color.blue = 0x0A;
-
     sleep_ms(100); // Allow the screen to wake up after power off.
     screen_hw_init();
     fill_display(&bg_color);

@@ -1,13 +1,14 @@
 #include "screen_interface.h"
 
-static void fill_display(struct RGB *rgb);
+static void fill_display(RGB *color);
 static void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos);
 static void screen_hw_init();
 static void set_screen_data(char data);
 static void screen_write_command(char cmd);
 static void screen_write_data(char data);
+static void screen_write_color_data(RGB *color);
 
-static void fill_display(struct RGB *rgb)
+static void fill_display(RGB *color)
 {
     screen_write_command(SCREEN_ORIENTATION ? SCREEN_PAGE_ADDR_SET : SCREEN_COLUMN_ADDR_SET);
     screen_write_data(0);
@@ -26,8 +27,7 @@ static void fill_display(struct RGB *rgb)
     {
         for (uint32_t x = 0; x < SCREEN_WIDTH; x++)
         {
-            screen_write_data((rgb -> red << 3) + (rgb -> green >> 5));
-            screen_write_data((rgb -> blue >> 3) + ((rgb -> green << 3) & 0xFF));
+            screen_write_color_data(color);
         }
     }
 }
@@ -48,10 +48,6 @@ static void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t 
     screen_write_data((y_pos + 31) & 0xFF);
 
     screen_write_command(SCREEN_MEMORY_WRITE);
-    struct RGB color;
-    color.red = 0;
-    color.green = 0b1111;
-    color.blue = 0b11111;
 
     char row;
     for (uint16_t y = 0; y < 16 ; y++)
@@ -61,13 +57,14 @@ static void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t 
         {
             if (row & 128)
             {
-                screen_write_data(0xFF);
-                screen_write_data(0xFF);
+                screen_write_color_data(&fg_color);
+                //screen_write_data((fg_color.red << 3) + (fg_color.green >> 5));
+                //screen_write_data(((bg_color.green << 5)) + (bg_color.blue & 0x1F));
+                //screen_write_data((fg_color.blue >> 3) + ((fg_color.green << 3) & 0xFF));
             }
             else
             {
-                screen_write_data((color.red << 3) + (color.green >> 5));
-                screen_write_data((color.blue >> 3) + ((color.green << 3) & 0xFF));
+                screen_write_color_data(&bg_color);
             }
             row = row << 1;
         }
@@ -223,4 +220,11 @@ static void screen_write_data(char data)
     set_screen_data(data);
     gpio_put(SCREEN_WR, 0);
     gpio_put(SCREEN_WR, 1);
+}
+
+
+static void screen_write_color_data(RGB *color)
+{
+    screen_write_data((color->red << 3) + (color->green >> 3));
+    screen_write_data((color->green << 5) + color->blue);
 }
