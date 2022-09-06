@@ -44,7 +44,7 @@ int main (void)
 
         if (kbd_buff_read != kbd_buff_write)
         {
-            screen_write_char_at_cursor(kbd_buff[kbd_buff_read]);
+            printf("%c", kbd_buff[kbd_buff_read]);
             kbd_buff_read++;
         }
     }
