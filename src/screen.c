@@ -1,6 +1,5 @@
 #include "IBM_VGA_8x16.h"
 #include "hardware/screen_interface.h"
-#include "screen.h"
 
 #include "hardware/screen_interface.c"
 
