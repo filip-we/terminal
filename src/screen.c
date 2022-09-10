@@ -1,5 +1,8 @@
+#include "pico/stdlib.h"
+#include "bsp/board.h"
 #include "IBM_VGA_8x16.h"
 #include "hardware/screen_interface.h"
+#include "screen.h"
 
 #include "hardware/screen_interface.c"
 
@@ -21,17 +24,6 @@
 char screen_buffer[255][SCREEN_COLUMNS];
 
 uint8_t screen_buff_scroll;
-
-struct Cursor {
-    uint8_t row;
-    uint8_t col;
-} cursor;
-
-void screen_write_char(char ch, uint8_t row, uint8_t col);
-void screen_display_test_image();
-void screen_set_bg_color(RGB *color);
-void screen_update();
-void screen_init();
 
 void advance_scrolling()
 {

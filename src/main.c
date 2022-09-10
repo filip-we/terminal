@@ -12,12 +12,14 @@
 #include "hardware/irq.h"
 #include "tusb.h"
 
+//#include "parser.c"
 #include "screen.c"
 
 void on_uart_rx() {
     while (uart_is_readable(TERM_UART)) {
         uint8_t ch = uart_getc(TERM_UART);
         screen_write_char_at_cursor(ch);
+        //parse_byte(ch);
     }
 }
 

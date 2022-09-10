@@ -1,13 +1,5 @@
 #include "screen_interface.h"
 
-static void fill_display(RGB *color);
-static void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos);
-static void screen_hw_init();
-static void set_screen_data(char data);
-static void screen_write_command(char cmd);
-static void screen_write_data(char data);
-static void screen_write_color_data(RGB *color);
-
 static void fill_display(RGB *color)
 {
     screen_write_command(SCREEN_ORIENTATION ? SCREEN_PAGE_ADDR_SET : SCREEN_COLUMN_ADDR_SET);
