@@ -1,29 +1,10 @@
+#include "screen.h"
+#include "hardware/screen_interface.h"
+#include "IBM_VGA_8x16.h"
+
 #include "pico/stdlib.h"
 #include "bsp/board.h"
-#include "IBM_VGA_8x16.h"
-#include "hardware/screen_interface.h"
-#include "screen.h"
 
-#include "hardware/screen_interface.c"
-
-#define FONT_WIDTH 16
-#define FONT_HEIGHT 16
-
-// These need to be changed if screen rotation is changed.
-#ifndef SCREEN_COLUMNS
-#define SCREEN_COLUMNS 15
-#endif
-#ifndef SCREEN_ROWS
-#define SCREEN_ROWS 20
-#endif
-#ifndef SCREEN_GRID_SIZE
-#define SCREEN_GRID_SIZE 300
-#endif
-
-
-char screen_buffer[255][SCREEN_COLUMNS];
-
-uint8_t screen_buff_scroll;
 
 void advance_scrolling()
 {
