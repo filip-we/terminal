@@ -1,5 +1,4 @@
 #include "screen.h"
-#include "screen_interface.h"
 #include "IBM_VGA_8x16.h"
 
 #include "pico/stdlib.h"
@@ -49,13 +48,6 @@ void screen_display_test_image()
 }
 
 
-void screen_set_bg_color(RGB *color)
-{
-    bg_color.red = color->red;
-    bg_color.blue = color->blue;
-    bg_color.green = color->green;
-}
-
 
 void screen_update()
 {
@@ -76,7 +68,7 @@ void screen_init()
 {
     sleep_ms(100); // Allow the screen to wake up after power off.
     screen_hw_init();
-    fill_display(&bg_color);
+    fill_display();
     screen_buff_scroll = 0;
     screen_update();
 }

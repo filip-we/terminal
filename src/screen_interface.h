@@ -81,7 +81,7 @@ typedef struct rgb {
 RGB bg_color;
 RGB fg_color;
 
-void fill_display(RGB *color);
+void fill_display();
 void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos);
 void screen_hw_init();
 void set_screen_data(char data);

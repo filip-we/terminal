@@ -2,7 +2,22 @@
 
 #include "bsp/board.h"
 
-void fill_display(RGB *color)
+void screen_set_bg_color(RGB *color)
+{
+    bg_color.red = color->red;
+    bg_color.blue = color->blue;
+    bg_color.green = color->green;
+}
+
+void screen_set_fg_color(RGB *color)
+{
+    fg_color.red = color->red;
+    fg_color.blue = color->blue;
+    fg_color.green = color->green;
+}
+
+
+void fill_display()
 {
     screen_write_command(SCREEN_ORIENTATION ? SCREEN_PAGE_ADDR_SET : SCREEN_COLUMN_ADDR_SET);
     screen_write_data(0);
@@ -21,7 +36,7 @@ void fill_display(RGB *color)
     {
         for (uint32_t x = 0; x < SCREEN_WIDTH; x++)
         {
-            screen_write_color_data(color);
+            screen_write_color_data(&bg_color);
         }
     }
 }
@@ -73,11 +88,13 @@ void screen_hw_init()
         .green = 0b000000,
         .blue = 0b11111,
     };
+    screen_set_bg_color(&bg_color);
     RGB fg_color = {
         .red = 0b11111,
         .green = 0b111111,
         .blue = 0b11111,
     };
+    screen_set_fg_color(&fg_color);
 
     gpio_init(SCREEN_RST);
     gpio_set_dir(SCREEN_RST, GPIO_OUT);

@@ -6,6 +6,7 @@
 #include "config.h"
 #include "usb_keyboard.h"
 #include "screen.h"
+#include "parser.h"
 
 #include <stdio.h>
 #include "pico/stdlib.h"
@@ -18,8 +19,7 @@
 void on_uart_rx() {
     while (uart_is_readable(TERM_UART)) {
         uint8_t ch = uart_getc(TERM_UART);
-        screen_write_char_at_cursor(ch);
-        //parse_byte(ch);
+        parse_byte(ch);
     }
 }
 
@@ -49,6 +49,7 @@ int main ()
 
     start_communications();
     screen_init();
+    parser_init();
     tusb_init();
 
     gpio_init(led_pin);
