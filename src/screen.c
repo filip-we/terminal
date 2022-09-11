@@ -1,5 +1,5 @@
 #include "screen.h"
-#include "hardware/screen_interface.h"
+#include "screen_interface.h"
 #include "IBM_VGA_8x16.h"
 
 #include "pico/stdlib.h"

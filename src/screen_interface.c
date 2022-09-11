@@ -1,6 +1,8 @@
 #include "screen_interface.h"
 
-static void fill_display(RGB *color)
+#include "bsp/board.h"
+
+void fill_display(RGB *color)
 {
     screen_write_command(SCREEN_ORIENTATION ? SCREEN_PAGE_ADDR_SET : SCREEN_COLUMN_ADDR_SET);
     screen_write_data(0);
@@ -25,7 +27,7 @@ static void fill_display(RGB *color)
 }
 
 
-static void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos)
+void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos)
 {
     screen_write_command(SCREEN_COLUMN_ADDR_SET);
     screen_write_data(x_pos >> 8);
@@ -64,8 +66,19 @@ static void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t 
 }
 
 
-static void screen_hw_init()
+void screen_hw_init()
 {
+    RGB bg_color = {
+        .red = 0x00000,
+        .green = 0b000000,
+        .blue = 0b11111,
+    };
+    RGB fg_color = {
+        .red = 0b11111,
+        .green = 0b111111,
+        .blue = 0b11111,
+    };
+
     gpio_init(SCREEN_RST);
     gpio_set_dir(SCREEN_RST, GPIO_OUT);
     gpio_put(SCREEN_RST, 1);
@@ -188,7 +201,7 @@ static void screen_hw_init()
 }
 
 
-static void set_screen_data(char data)
+void set_screen_data(char data)
 {
     for (int i = 0; i < 8; i++)
     {
@@ -197,7 +210,7 @@ static void set_screen_data(char data)
 }
 
 
-static void screen_write_command(char cmd)
+void screen_write_command(char cmd)
 {
     gpio_put(SCREEN_CD, 0);
     set_screen_data(cmd);
@@ -206,7 +219,7 @@ static void screen_write_command(char cmd)
 }
 
 
-static void screen_write_data(char data)
+void screen_write_data(char data)
 {
     gpio_put(SCREEN_CD, 1);
     set_screen_data(data);
@@ -215,7 +228,7 @@ static void screen_write_data(char data)
 }
 
 
-static void screen_write_color_data(RGB *color)
+void screen_write_color_data(RGB *color)
 {
     screen_write_data((color->red << 3) + (color->green >> 3));
     screen_write_data((color->green << 5) + color->blue);

@@ -15,7 +15,7 @@
 #define SCREEN_GRID_SIZE 300
 #endif
 
-#include "hardware/screen_interface.h"
+#include "screen_interface.h"
 
 #include "pico/stdlib.h"
 

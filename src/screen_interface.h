@@ -70,6 +70,7 @@
 #define SCREEN_ORIENTATION 1
 #endif
 
+#include "pico/stdlib.h"
 
 typedef struct rgb {
     unsigned int red    : 5;
@@ -77,25 +78,16 @@ typedef struct rgb {
     unsigned int blue   : 5;
 } RGB;
 
-RGB bg_color = {
-    .red = 0x00000,
-    .green = 0b000000,
-    .blue = 0b11111,
-};
+RGB bg_color;
+RGB fg_color;
 
-RGB fg_color = {
-    .red = 0b11111,
-    .green = 0b111111,
-    .blue = 0b11111,
-};
-
-static void fill_display(RGB *color);
-static void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos);
-static void screen_hw_init();
-static void set_screen_data(char data);
-static void screen_write_command(char cmd);
-static void screen_write_data(char data);
-static void screen_write_color_data(RGB *color);
+void fill_display(RGB *color);
+void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos);
+void screen_hw_init();
+void set_screen_data(char data);
+void screen_write_command(char cmd);
+void screen_write_data(char data);
+void screen_write_color_data(RGB *color);
 
 
 #endif

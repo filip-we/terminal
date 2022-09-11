@@ -4,16 +4,16 @@
  */
 
 #include "config.h"
-#include "hardware/usb_keyboard.h"
+#include "usb_keyboard.h"
+#include "screen.h"
 
+#include <stdio.h>
 #include "pico/stdlib.h"
 #include "bsp/board.h"
 #include "hardware/uart.h"
 #include "hardware/irq.h"
 #include "tusb.h"
 
-//#include "parser.c"
-#include "screen.c"
 
 void on_uart_rx() {
     while (uart_is_readable(TERM_UART)) {
@@ -43,7 +43,7 @@ static void start_communications()
 }
 
 
-int main (void)
+int main ()
 {
     uint32_t led_pin = PICO_DEFAULT_LED_PIN;
 
