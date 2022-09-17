@@ -16,7 +16,8 @@
 #include "tusb.h"
 
 
-void on_uart_rx() {
+void on_uart_rx()
+{
     while (uart_is_readable(TERM_UART)) {
         uint8_t ch = uart_getc(TERM_UART);
         parse_byte(ch);

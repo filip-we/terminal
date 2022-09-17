@@ -44,5 +44,13 @@ enum control_codes
     US,
 };
 
+enum states
+{
+    CODE_GROUP_NORMAL,
+    CODE_GROUP_HASH,
+    CODE_GROUP_G0,
+    CODE_GROUP_G1,
+    CODE_GROUP_CSI,
+};
 
 #endif
