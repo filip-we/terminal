@@ -15,6 +15,8 @@
 ## Features
 1. The setup can be USB-powered by connecting the USB-to-serial-converter to a PC (or a USB-power-brick).
 2. The Pico can utilize debug-prints which can be read on a PC.
+3. A keyboard is connected to the Pico on its build in Micro-USB-port. This requires a USB-OTG-cable.
+4. When not using the keyboard you can connect the pico to your computer for uploading firmware, as usual.
 
 
 ## Alternative to serial-converter
