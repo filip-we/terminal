@@ -43,6 +43,17 @@ static void start_communications()
     uart_set_fifo_enabled(TERM_UART, false);
 }
 
+static void uart_read_loop() {
+    while (true) {
+        on_uart_rx();
+
+        if (kbd_buff_read != kbd_buff_write && uart_is_writable(TERM_UART))
+        {
+            uart_putc(TERM_UART, kbd_buff[kbd_buff_read]);
+            kbd_buff_read++;
+        }
+    }
+}
 
 int main ()
 {
@@ -57,17 +68,13 @@ int main ()
     gpio_set_dir(led_pin, GPIO_OUT);
     gpio_put(led_pin, true);
 
+    multicore_launch_core1(uart_read_loop);
+
     while (true)
     {
         tuh_task();
         screen_update();
-        on_uart_rx();
 
-        if (kbd_buff_read != kbd_buff_write && uart_is_writable(TERM_UART))
-        {
-            uart_putc(TERM_UART, kbd_buff[kbd_buff_read]);
-            kbd_buff_read++;
-        }
     }
     return 0;
 }

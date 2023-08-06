@@ -17,6 +17,7 @@ target_include_directories(terminal PUBLIC
 
 target_link_libraries(terminal PUBLIC
     pico_stdlib
+    pico_multicore
     tinyusb_host
     tinyusb_board
 )
