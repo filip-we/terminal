@@ -26,4 +26,8 @@ Documented the hardware. Managed to setup debug prints from the Pico via the USB
 ## 2022-08-28
 Now the debug-prints where not working. I tried to connect to a Raspberry Pi 400 instead of the USB-serial-converter. After hours of debugging and trying all combinations of TX+RX pins with uart0 and uart1 I am pretty sure something is off with the Pico. I could only get STDIO working on GPIO12 and 13. Next step should be to get the SWD, Serial Wire Debug, which should be fairly simple on the Raspberry Pi 400.
 
+## 2023-08-06
+I installed the toolchain on my "new" computer, running Arch Linux. No trouble whatsoever getting the Pico examples to run. Compiling this project, however, gave several `multiple definitions` errors, despite those variables not being used in `main.c`. After help by ChatGPT I could determine some variables needed a `static` to fix the issue.
+
+I also tried scripting tests of my device. The test would send a series of bytes, simply. This would allow me to test that all escape-codes are handeled properly. When trying this with a simple "hello, world"-message only the first letter was displayed. This makes me believe the USB-tasks takes too long for my terminal to keep up with the incomming data from the PC.
 
