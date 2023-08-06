@@ -83,13 +83,13 @@ void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, 
 
 void screen_hw_init()
 {
-    RGB bg_color = {
+    bg_color = (RGB) {
         .red = 0x00000,
         .green = 0b000000,
         .blue = 0b11111,
     };
     screen_set_bg_color(&bg_color);
-    RGB fg_color = {
+    fg_color = (RGB) {
         .red = 0b11111,
         .green = 0b111111,
         .blue = 0b11111,

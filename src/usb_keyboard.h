@@ -3,8 +3,8 @@
 
 #include "bsp/board.h"
 
-uint8_t kbd_buff_write;
-uint8_t kbd_buff_read;
-char kbd_buff[256];
+static uint8_t kbd_buff_write;
+static uint8_t kbd_buff_read;
+static char kbd_buff[256];
 
 #endif

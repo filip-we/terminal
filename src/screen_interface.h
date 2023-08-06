@@ -78,8 +78,8 @@ typedef struct rgb {
     unsigned int blue   : 5;
 } RGB;
 
-RGB bg_color;
-RGB fg_color;
+static RGB bg_color;
+static RGB fg_color;
 
 void fill_display();
 void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos);

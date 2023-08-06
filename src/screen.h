@@ -26,12 +26,12 @@ void screen_set_bg_color(RGB *color);
 void screen_update();
 void screen_init();
 
-char screen_buffer[255][SCREEN_COLUMNS];
+static char screen_buffer[255][SCREEN_COLUMNS];
 
-uint8_t screen_buff_scroll;
+static uint8_t screen_buff_scroll;
 
 
-struct Cursor {
+static struct Cursor {
     uint8_t row;
     uint8_t col;
 } cursor;
