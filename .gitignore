@@ -35,4 +35,8 @@
 build/*
 
 py_venv/
+.python_venv
+**/.pytest_cache
+**/__pycache__
+
 
