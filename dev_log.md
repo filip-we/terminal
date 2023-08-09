@@ -31,3 +31,6 @@ I installed the toolchain on my "new" computer, running Arch Linux. No trouble w
 
 I also tried scripting tests of my device. The test would send a series of bytes, simply. This would allow me to test that all escape-codes are handeled properly. When trying this with a simple "hello, world"-message only the first letter was displayed. This makes me believe the USB-tasks takes too long for my terminal to keep up with the incomming data from the PC.
 
+# 2023-08-09
+I want to be able to write unit-tests in C. This requires me to be able to compile another target than the Termina-executable itself. After some searching I found [this guide](http://www.throwtheswitch.org/build/cmake). I've already implemented the switch for selecting compiling the program or the tests.
+
