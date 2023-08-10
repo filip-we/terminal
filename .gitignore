@@ -33,6 +33,8 @@
 
 # Own stuff
 build/*
+CMakeCache.txt
+CMakeFiles/
 
 py_venv/
 .python_venv

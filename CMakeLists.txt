@@ -28,10 +28,12 @@ pico_add_extra_outputs(terminal)
 
 add_subdirectory(src)
 
-#elseif(TARGET_GROUP STREQUAL test)
-#add_executable(test_runner
-#  tests/runner.c
-#)
+elseif(TARGET_GROUP STREQUAL test)
+project(test C CXX ASM)
+
+add_executable(test_runner
+  tests/runner.c
+)
 
 
 else()

@@ -1,9 +1,7 @@
 #!/bin/bash
 rm -r build/*
-TARGET_GROUP=$2
-TARGET_GROUP="${TARGET_GROUP:-default}"
 cmake \
-    -DTARGET_GROUP=$TARGET_GROUP \
+    -DTARGET_GROUP=terminal \
     -S . \
     -B build/.
 
