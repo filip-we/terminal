@@ -4,7 +4,9 @@ add_executable(rp_pico_program
   main.c
 )
 
-target_link_libraries(rp_pico_program PRIVATE terminal_src
+target_link_libraries(rp_pico_program
+    PRIVATE rp_pico_drivers
+    PRIVATE terminal
     pico_stdlib
     pico_multicore
     tinyusb_host
