@@ -84,9 +84,9 @@ void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, 
 void screen_hw_init()
 {
     bg_color = (RGB) {
-        .red = 0x00000,
+        .red = 0x00111,
         .green = 0b000000,
-        .blue = 0b11111,
+        .blue = 0b00000,
     };
     screen_set_bg_color(&bg_color);
     fg_color = (RGB) {
@@ -250,3 +250,24 @@ void screen_write_color_data(RGB *color)
     screen_write_data((color->red << 3) + (color->green >> 3));
     screen_write_data((color->green << 5) + color->blue);
 }
+
+void screen_update_text(
+    char*  screen_buffer,
+    uint8_t screen_rows,
+    uint8_t screen_columns,
+    unsigned char* font_map,
+    uint8_t screen_buff_scroll)
+{
+    for (int row = 0; row < screen_rows; row++)
+    {
+        for (int col = 0; col < screen_columns; col++)
+        {
+            print_char(font_map,
+                *(screen_buffer +
+                    (screen_rows * (screen_buff_scroll + row)) +
+                    (col)
+                ),
+                col * FONT_WIDTH,
+                row * FONT_HEIGHT);
+        }
+    }}

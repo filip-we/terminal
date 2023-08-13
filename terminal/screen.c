@@ -1,8 +1,6 @@
-#include "screen.h"
-#include "IBM_VGA_8x16.h"
+#include <string.h>
 
-#include "pico/stdlib.h"
-#include "bsp/board.h"
+#include "screen.h"
 
 
 void advance_scrolling()
@@ -35,40 +33,13 @@ void screen_write_char_at_cursor(char ch)
     }
 }
 
-
-void screen_display_test_image()
+void screen_display_test_image(unsigned char* font_map)
 {
     for (int y = 0; y < 16; y++)
     {
         for (int x = 0; x < 16; x++)
         {
-            print_char(IBM_VGA_8x16, (x + y * 16), x * 8, y * 16);
+            print_char(font_map, (x + y * 16), x * 8, y * 16);
         }
     }
-}
-
-
-
-void screen_update()
-{
-    for (int row = 0; row < SCREEN_ROWS; row++)
-    {
-        for (int col = 0; col < SCREEN_COLUMNS; col++)
-        {
-            print_char(IBM_VGA_8x16,
-                screen_buffer[screen_buff_scroll + row][col],
-                col * FONT_WIDTH,
-                row * FONT_HEIGHT);
-        }
-    }
-}
-
-
-void screen_init()
-{
-    sleep_ms(100); // Allow the screen to wake up after power off.
-    screen_hw_init();
-    fill_display();
-    screen_buff_scroll = 0;
-    screen_update();
 }

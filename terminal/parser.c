@@ -31,7 +31,7 @@ void parse_byte(char ch)
         else
         {
             esc_code_depth = 0;
-            screen_write_char_at_cursor(ch);
+            //screen_write_char_at_cursor(ch);
         }
     }
     else if (esc_code_depth == 2)
@@ -89,12 +89,12 @@ void parse_byte(char ch)
         }
         else if (ch == 'c')
         {
-            screen_init();
+            //screen_init();
             esc_code_depth = 0;
         }
         else
         {
-            screen_write_char_at_cursor(ch);
+            //screen_write_char_at_cursor(ch);
             esc_code_depth = 0;
         }
     }
@@ -118,7 +118,7 @@ void parse_byte(char ch)
         }
         else
         {
-            screen_write_char_at_cursor(ch);
+            //screen_write_char_at_cursor(ch);
             esc_code_depth = 0;
         }
     }
@@ -130,26 +130,26 @@ void parse_byte(char ch)
         }
         else if (ch == BSPC)
         {
-            cursor.col --;
-            if (cursor.col == -1)
-            {
-                cursor.col = SCREEN_ROWS;
-                cursor.row --;
-            }
-            screen_write_char(' ', cursor.row, cursor.col);
+            //cursor.col --;
+            //if (cursor.col == -1)
+            //{
+            //    cursor.col = SCREEN_ROWS;
+            //    cursor.row --;
+            //}
+            //screen_write_char(' ', cursor.row, cursor.col);
         }
         else if (ch == CR)
         {
-            cursor.row ++;
-            cursor.col = 0;
+            //cursor.row ++;
+            //cursor.col = 0;
         }
         else
         {
             if (ch <= US)
             {
-                screen_write_char_at_cursor('!');
+                //screen_write_char_at_cursor('!');
             }
-            screen_write_char_at_cursor(ch);
+            //screen_write_char_at_cursor(ch);
         }
     }
 }

@@ -3,8 +3,6 @@
 
 #define BSPC 127
 
-#include "pico/stdlib.h"
-
 void parse_byte(char ch);
 void parser_init();
 

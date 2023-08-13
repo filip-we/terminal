@@ -11,22 +11,22 @@
 #ifndef SCREEN_ROWS
 #define SCREEN_ROWS 20
 #endif
+#ifndef SCREEN_BUFFER_NR_OF_ROWS
+#define SCREEN_BUFFER_NR_OF_ROWS 255
+#endif
 #ifndef SCREEN_GRID_SIZE
 #define SCREEN_GRID_SIZE 300
 #endif
 
-#include "screen_interface.h"
-
-#include "pico/stdlib.h"
+#include <stdint.h>
+#include <stdbool.h>
 
 void screen_write_char(char ch, uint8_t row, uint8_t col);
 void screen_write_char_at_cursor(char ch);
-void screen_display_test_image();
-void screen_set_bg_color(RGB *color);
+void screen_display_test_image(unsigned char* font_map);
 void screen_update();
-void screen_init();
 
-static char screen_buffer[255][SCREEN_COLUMNS];
+static char screen_buffer[SCREEN_BUFFER_NR_OF_ROWS][SCREEN_COLUMNS];
 
 static uint8_t screen_buff_scroll;
 

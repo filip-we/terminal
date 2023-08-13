@@ -6,7 +6,9 @@
 #include "config.h"
 #include "usb_keyboard.h"
 #include "screen.h"
-#include "parser.h"
+#include "screen_interface.h"
+//#include "parser.h"
+#include "IBM_VGA_8x16.h"
 
 #include <stdio.h>
 #include "pico/stdlib.h"
@@ -60,20 +62,40 @@ int main ()
     uint32_t led_pin = PICO_DEFAULT_LED_PIN;
 
     start_communications();
-    screen_init();
-    parser_init();
-    tusb_init();
 
     gpio_init(led_pin);
     gpio_set_dir(led_pin, GPIO_OUT);
     gpio_put(led_pin, true);
+
+    //screen_buff_scroll = 0;
+    //parser_init();
+    sleep_ms(100); // Allow the screen to wake up after power off.
+    screen_hw_init();
+    fill_display();
+    tusb_init();
+    //screen_update_text(
+    //    (char*) screen_buffer,
+    //    (uint8_t) SCREEN_ROWS,
+    //    (uint8_t) SCREEN_COLUMNS,
+    //    (unsigned char*) IBM_VGA_8x16,
+    //    screen_buff_scroll);
+
+    screen_buffer[1][1] = 'A';
+    screen_buffer[1][2] = 'A';
+    screen_buffer[1][3] = 'A';
+
 
     multicore_launch_core1(uart_read_loop);
 
     while (true)
     {
         tuh_task();
-        screen_update();
+        screen_update_text(
+            (char*) screen_buffer,
+            (uint8_t) SCREEN_ROWS,
+            (uint8_t) SCREEN_COLUMNS,
+            (unsigned char*) IBM_VGA_8x16,
+            screen_buff_scroll);
 
     }
     return 0;
