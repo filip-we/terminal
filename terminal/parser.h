@@ -3,9 +3,13 @@
 
 #define BSPC 127
 
-#include "pico/stdlib.h"
+#include <stdint.h>
+#include "screen.h"
 
-void parse_byte(char ch);
+void parse_byte(
+    char ch,
+    struct Cursor* cursor,
+    char* screen_buffer);
 void parser_init();
 
 enum control_codes

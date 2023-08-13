@@ -1,6 +1,5 @@
 #include "parser.h"
 
-#include "screen.h"
 
 char esc_seq_buffer[256];
 uint8_t esc_seq_buffer_write;
@@ -17,9 +16,37 @@ bool parse_csi_code()
     return true;
 }
 
-
-void parse_byte(char ch)
+void screen_write_char_at_cursor(char ch,
+    struct Cursor * cursor,
+    char* screen_buffer)
 {
+    *(screen_buffer +
+        (cursor -> row + screen_buff_scroll) +
+        (cursor -> col )) = ch;
+    (*cursor).col ++;
+    if (cursor -> col == SCREEN_COLUMNS)
+    {
+        cursor -> col = 0;
+        cursor -> row ++;
+        if (cursor -> row == SCREEN_ROWS)
+        {
+            cursor -> row = SCREEN_ROWS - 1;
+            advance_scrolling();
+        }
+    }
+}
+
+
+void parse_byte(char ch,
+    struct Cursor * cursor,
+    char* screen_buffer)
+{
+    //*(screen_buffer + 40) = '*';
+    //*(screen_buffer + 41 + (*cursor).col) = '!';
+    //(*cursor).col ++;
+    //*(screen_buffer + 42 + (*cursor).col) = '2';
+
+
     if (esc_code_depth == 1)
     {
         if (ch == '[')
@@ -31,7 +58,7 @@ void parse_byte(char ch)
         else
         {
             esc_code_depth = 0;
-            screen_write_char_at_cursor(ch);
+            //screen_write_char_at_cursor(ch);
         }
     }
     else if (esc_code_depth == 2)
@@ -89,12 +116,12 @@ void parse_byte(char ch)
         }
         else if (ch == 'c')
         {
-            screen_init();
+            //screen_init();
             esc_code_depth = 0;
         }
         else
         {
-            screen_write_char_at_cursor(ch);
+            //screen_write_char_at_cursor(ch);
             esc_code_depth = 0;
         }
     }
@@ -118,7 +145,7 @@ void parse_byte(char ch)
         }
         else
         {
-            screen_write_char_at_cursor(ch);
+            //screen_write_char_at_cursor(ch);
             esc_code_depth = 0;
         }
     }
@@ -130,26 +157,27 @@ void parse_byte(char ch)
         }
         else if (ch == BSPC)
         {
-            cursor.col --;
-            if (cursor.col == -1)
-            {
-                cursor.col = SCREEN_ROWS;
-                cursor.row --;
-            }
-            screen_write_char(' ', cursor.row, cursor.col);
+            //cursor.col --;
+            //if (cursor.col == -1)
+            //{
+            //    cursor.col = SCREEN_ROWS;
+            //    cursor.row --;
+            //}
+            //screen_write_char(' ', cursor.row, cursor.col);
         }
         else if (ch == CR)
         {
-            cursor.row ++;
-            cursor.col = 0;
+            //cursor_row ++;
+            //cursor_col = 0;
         }
         else
         {
             if (ch <= US)
             {
-                screen_write_char_at_cursor('!');
+                //screen_write_char_at_cursor('!');
             }
-            screen_write_char_at_cursor(ch);
+            screen_write_char_at_cursor(ch, cursor, screen_buffer);
+
         }
     }
 }

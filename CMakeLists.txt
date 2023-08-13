@@ -14,6 +14,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 pico_sdk_init()
 
-add_subdirectory(src)
+add_subdirectory(rp_pico_drivers)
+add_subdirectory(terminal)
 add_subdirectory(rp_pico_program)
 #add_subdirectory(tests)

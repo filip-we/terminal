@@ -70,6 +70,11 @@
 #define SCREEN_ORIENTATION 1
 #endif
 
+#ifndef FONT_WIDTH
+#define FONT_WIDTH 16
+#define FONT_HEIGHT 16
+#endif
+
 #include "pico/stdlib.h"
 
 typedef struct rgb {
@@ -82,12 +87,18 @@ static RGB bg_color;
 static RGB fg_color;
 
 void fill_display();
-void print_char(unsigned char *font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos);
+void print_char(unsigned char* font_map, unsigned char char_nr, uint16_t x_pos, uint16_t y_pos);
 void screen_hw_init();
 void set_screen_data(char data);
 void screen_write_command(char cmd);
 void screen_write_data(char data);
 void screen_write_color_data(RGB *color);
+void screen_update_text(
+    char*  screen_buffer,
+    uint8_t screen_rows,
+    uint8_t screen_columns,
+    unsigned char* font_map,
+    uint8_t screen_buff_scroll);
 
 
 #endif

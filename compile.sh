@@ -1,5 +1,5 @@
 #!/bin/bash
-rm -r build/*
+#rm -r build/*
 cmake \
     -S . \
     -B build/.
@@ -12,7 +12,9 @@ read -p "Upload to "$1"?" -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-    cp build/rp_pico_program/rp_pico_program.uf2 $1
+    sudo mount -o gid=users,fmask=113,dmask=002 $1 .rpi-rp2
+    sudo cp build/rp_pico_program/rp_pico_program.uf2 .rpi-rp2
+    sudo umount .rpi-rp2
 fi
 
 #openocd -f interface/raspberrypi-swd.cfg \
