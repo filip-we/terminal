@@ -17,22 +17,6 @@ void screen_write_char(char ch, uint8_t row, uint8_t col)
 }
 
 
-void screen_write_char_at_cursor(char ch)
-{
-    screen_buffer[screen_buff_scroll + cursor.row][cursor.col] = ch;
-    cursor.col ++;
-    if (cursor.col == SCREEN_COLUMNS)
-    {
-        cursor.col = 0;
-        cursor.row ++;
-        if (cursor.row == SCREEN_ROWS)
-        {
-            cursor.row = SCREEN_ROWS - 1;
-            advance_scrolling();
-        }
-    }
-}
-
 void screen_display_test_image(unsigned char* font_map)
 {
     for (int y = 0; y < 16; y++)

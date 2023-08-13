@@ -4,11 +4,11 @@
 #define BSPC 127
 
 #include <stdint.h>
+#include "screen.h"
 
 void parse_byte(
     char ch,
-    uint8_t* cursor_row,
-    uint8_t* cursor_col,
+    struct Cursor* cursor,
     char* screen_buffer);
 void parser_init();
 

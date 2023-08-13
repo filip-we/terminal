@@ -1,6 +1,5 @@
 #include "parser.h"
 
-#include "screen.h"
 
 char esc_seq_buffer[256];
 uint8_t esc_seq_buffer_write;
@@ -17,12 +16,37 @@ bool parse_csi_code()
     return true;
 }
 
-
-void parse_byte(char ch,
-    uint8_t* cursor_row,
-    uint8_t* cursor_col,
+void screen_write_char_at_cursor(char ch,
+    struct Cursor * cursor,
     char* screen_buffer)
 {
+    *(screen_buffer +
+        (cursor -> row + screen_buff_scroll) +
+        (cursor -> col )) = ch;
+    (*cursor).col ++;
+    if (cursor -> col == SCREEN_COLUMNS)
+    {
+        cursor -> col = 0;
+        cursor -> row ++;
+        if (cursor -> row == SCREEN_ROWS)
+        {
+            cursor -> row = SCREEN_ROWS - 1;
+            advance_scrolling();
+        }
+    }
+}
+
+
+void parse_byte(char ch,
+    struct Cursor * cursor,
+    char* screen_buffer)
+{
+    //*(screen_buffer + 40) = '*';
+    //*(screen_buffer + 41 + (*cursor).col) = '!';
+    //(*cursor).col ++;
+    //*(screen_buffer + 42 + (*cursor).col) = '2';
+
+
     if (esc_code_depth == 1)
     {
         if (ch == '[')
@@ -143,8 +167,8 @@ void parse_byte(char ch,
         }
         else if (ch == CR)
         {
-            cursor_row ++;
-            cursor_col = 0;
+            //cursor_row ++;
+            //cursor_col = 0;
         }
         else
         {
@@ -152,11 +176,9 @@ void parse_byte(char ch,
             {
                 //screen_write_char_at_cursor('!');
             }
-            //screen_write_char_at_cursor(ch);
-            screen_buffer[*cursor_row * 8 + *cursor_col * 16] = ch;
+            screen_write_char_at_cursor(ch, cursor, screen_buffer);
+
         }
-        screen_buffer[(*cursor_row) * 8 + (*cursor_col) * 16] = ch;
-        cursor_row ++;
     }
 }
 

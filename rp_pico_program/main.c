@@ -25,10 +25,8 @@ void on_uart_rx()
     while (uart_is_readable(TERM_UART)) {
         uint8_t ch = uart_getc(TERM_UART);
         parse_byte(ch,
-            (uint8_t *) cursor.row,
-            (uint8_t *) cursor.col,
-            (unsigned char*) screen_buffer);
-        cursor.col ++;
+            &cursor,
+            (char *) screen_buffer);
     }
 }
 
@@ -79,20 +77,6 @@ int main ()
     screen_hw_init();
     fill_display();
     tusb_init();
-    //screen_display_test_image(IBM_VGA_8x16);
-    screen_buffer[0][1] = 'A';
-    screen_buffer[0][2] = 'B';
-    screen_buffer[0][3] = 'C';
-    screen_buffer[4][1] = 'a';
-    screen_buffer[4][2] = 'b';
-    screen_buffer[4][3] = 'c';
-    //screen_update_text(
-    //    (char*) screen_buffer,
-    //    (uint8_t) SCREEN_ROWS,
-    //    (uint8_t) SCREEN_COLUMNS,
-    //    (unsigned char*) IBM_VGA_8x16,
-    //    screen_buff_scroll);
-
 
     multicore_launch_core1(uart_read_loop);
 

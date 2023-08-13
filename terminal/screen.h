@@ -22,7 +22,7 @@
 #include <stdbool.h>
 
 void screen_write_char(char ch, uint8_t row, uint8_t col);
-void screen_write_char_at_cursor(char ch);
+//void screen_write_char_at_cursor(char ch);
 void screen_display_test_image(unsigned char* font_map);
 void screen_update();
 
