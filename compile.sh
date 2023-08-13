@@ -1,7 +1,6 @@
 #!/bin/bash
 rm -r build/*
 cmake \
-    -DTARGET_GROUP=terminal \
     -S . \
     -B build/.
 
@@ -13,10 +12,10 @@ read -p "Upload to "$1"?" -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
 then
-    cp build/terminal.uf2 $1
+    cp build/rp_pico_program/rp_pico_program.uf2 $1
 fi
 
 #openocd -f interface/raspberrypi-swd.cfg \
 #-f target/rp2040.cfg \
-#-c "program build/terminal.elf verify reset exit"
+#-c "program build/rp_pico_program/rp_pico_program.elf verify reset exit"
 
