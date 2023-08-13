@@ -270,4 +270,5 @@ void screen_update_text(
                 col * FONT_WIDTH,
                 row * FONT_HEIGHT);
         }
-    }}
+    }
+}

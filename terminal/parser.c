@@ -18,7 +18,10 @@ bool parse_csi_code()
 }
 
 
-void parse_byte(char ch)
+void parse_byte(char ch,
+    uint8_t* cursor_row,
+    uint8_t* cursor_col,
+    char* screen_buffer)
 {
     if (esc_code_depth == 1)
     {
@@ -140,8 +143,8 @@ void parse_byte(char ch)
         }
         else if (ch == CR)
         {
-            //cursor.row ++;
-            //cursor.col = 0;
+            cursor_row ++;
+            cursor_col = 0;
         }
         else
         {
@@ -150,7 +153,10 @@ void parse_byte(char ch)
                 //screen_write_char_at_cursor('!');
             }
             //screen_write_char_at_cursor(ch);
+            screen_buffer[*cursor_row * 8 + *cursor_col * 16] = ch;
         }
+        screen_buffer[(*cursor_row) * 8 + (*cursor_col) * 16] = ch;
+        cursor_row ++;
     }
 }
 

@@ -3,7 +3,13 @@
 
 #define BSPC 127
 
-void parse_byte(char ch);
+#include <stdint.h>
+
+void parse_byte(
+    char ch,
+    uint8_t* cursor_row,
+    uint8_t* cursor_col,
+    char* screen_buffer);
 void parser_init();
 
 enum control_codes
