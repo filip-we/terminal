@@ -264,7 +264,7 @@ void screen_update_text(
         {
             print_char(font_map,
                 *(screen_buffer +
-                    (screen_buff_scroll + row * screen_columns) +
+                    (screen_buff_scroll + row ) * screen_columns +
                     col
                 ),
                 col * FONT_WIDTH,
