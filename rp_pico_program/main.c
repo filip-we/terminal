@@ -26,7 +26,8 @@ void on_uart_rx()
         uint8_t ch = uart_getc(TERM_UART);
         parse_byte(ch,
             &cursor,
-            (char *) screen_buffer);
+            (char *) screen_buffer,
+            (uint8_t*) screen_buff_scroll);
     }
 }
 
@@ -71,7 +72,7 @@ int main ()
     gpio_set_dir(led_pin, GPIO_OUT);
     gpio_put(led_pin, true);
 
-    //screen_buff_scroll = 0;
+    screen_buff_scroll = 0;
     //parser_init();
     sleep_ms(100); // Allow the screen to wake up after power off.
     screen_hw_init();
@@ -83,6 +84,7 @@ int main ()
     while (true)
     {
         tuh_task();
+        screen_buffer[0][0] = (char) (screen_buff_scroll + 48);
         screen_update_text(
             (char*) screen_buffer,
             (uint8_t) SCREEN_ROWS,

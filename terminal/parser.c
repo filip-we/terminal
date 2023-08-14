@@ -16,30 +16,11 @@ bool parse_csi_code()
     return true;
 }
 
-void screen_write_char_at_cursor(char ch,
-    struct Cursor * cursor,
-    char* screen_buffer)
-{
-    *(screen_buffer +
-        (cursor -> row + screen_buff_scroll) +
-        (cursor -> col )) = ch;
-    (*cursor).col ++;
-    if (cursor -> col == SCREEN_COLUMNS)
-    {
-        cursor -> col = 0;
-        cursor -> row ++;
-        if (cursor -> row == SCREEN_ROWS)
-        {
-            cursor -> row = SCREEN_ROWS - 1;
-            advance_scrolling();
-        }
-    }
-}
-
 
 void parse_byte(char ch,
     struct Cursor * cursor,
-    char* screen_buffer)
+    char* screen_buffer,
+    uint8_t* screen_buff_scroll)
 {
     //*(screen_buffer + 40) = '*';
     //*(screen_buffer + 41 + (*cursor).col) = '!';
@@ -176,7 +157,7 @@ void parse_byte(char ch,
             {
                 //screen_write_char_at_cursor('!');
             }
-            screen_write_char_at_cursor(ch, cursor, screen_buffer);
+            screen_write_char_at_cursor(ch, cursor, screen_buffer, screen_buff_scroll);
 
         }
     }
