@@ -1,5 +1,8 @@
 #!/bin/bash
-#rm -r build/*
+rm -r build/rp_pico_drivers
+rm -r build/rp_pico_program
+rm -r build/terminal
+
 cmake \
     -S . \
     -B build/.
