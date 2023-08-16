@@ -20,7 +20,7 @@ bool parse_csi_code()
 void parse_byte(char ch,
     struct Cursor * cursor,
     char* screen_buffer,
-    uint8_t* screen_buff_scroll)
+    uint8_t* scroll)
 {
     //*(screen_buffer + 40) = '*';
     //*(screen_buffer + 41 + (*cursor).col) = '!';
@@ -157,7 +157,7 @@ void parse_byte(char ch,
             {
                 //screen_write_char_at_cursor('!');
             }
-            screen_write_char_at_cursor(ch, cursor, screen_buffer, screen_buff_scroll);
+            screen_write_char_at_cursor(ch, cursor, screen_buffer, scroll);
 
         }
     }
