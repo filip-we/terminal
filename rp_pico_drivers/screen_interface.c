@@ -272,3 +272,14 @@ void screen_update_text(
         }
     }
 }
+
+void screen_display_test_image(unsigned char* font_map)
+{
+    for (int y = 0; y < 16; y++)
+    {
+        for (int x = 0; x < 16; x++)
+        {
+            print_char(font_map, (x + y * 16), x * 8, y * 16);
+        }
+    }
+}

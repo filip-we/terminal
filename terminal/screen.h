@@ -36,7 +36,6 @@ void screen_write_char_at_cursor(
     struct Cursor *,
     char* screen_buffer,
     uint8_t* screen_buff_scroll);
-void screen_display_test_image(unsigned char* font_map);
 void screen_update();
 
 #endif
