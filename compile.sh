@@ -5,7 +5,8 @@ rm -r build/terminal
 
 cmake \
     -S . \
-    -B build/.
+    -B build/. \
+    -DTARGET_GROUP=$2
 
 cd build
 make
