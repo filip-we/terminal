@@ -2,10 +2,12 @@
 rm -r build/rp_pico_drivers
 rm -r build/rp_pico_program
 rm -r build/terminal
+rm -r build/tests
 
 cmake \
     -S . \
-    -B build/.
+    -B build/. \
+    -DTARGET_GROUP=$2
 
 cd build
 make

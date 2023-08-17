@@ -1,5 +1,5 @@
 #include <stdio.h>
-//#include "parser.h"
+#include "parser.h"
 
 int tests_run = 0;
 
