@@ -21,7 +21,7 @@ if(TARGET_GROUP STREQUAL "firmware")
 
 elseif(TARGET_GROUP STREQUAL "tests")
     add_subdirectory(tests)
-    #add_subdirectory(terminal)
+    add_subdirectory(terminal)
 
 else()
     message(FATAL_ERROR "I don't know the TARGET_GROUP you gave me!")

@@ -4,5 +4,5 @@ add_executable(tests
   runner.c
 )
 
-#target_link_libraries(tests
-#    terminal)
+target_link_libraries(tests
+    terminal)
