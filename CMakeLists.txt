@@ -1,5 +1,4 @@
 cmake_minimum_required(VERSION 3.13)
-project(terminal C CXX ASM)
 
 set(CMAKE_C_STANDARD 11)
 set(CMAKE_CXX_STANDARD 17)
@@ -12,6 +11,7 @@ if(TARGET_GROUP STREQUAL "firmware")
     set(TINYUSB_FAMILY_PROJECT_NAME_PREFIX "tinyusb_host_")
 
     include($ENV{PICO_SDK_PATH}/external/pico_sdk_import.cmake)
+    project(terminal C CXX ASM)
 
     pico_sdk_init()
 
@@ -20,6 +20,7 @@ if(TARGET_GROUP STREQUAL "firmware")
     add_subdirectory(rp_pico_program)
 
 elseif(TARGET_GROUP STREQUAL "tests")
+    project(terminal C)
     add_subdirectory(tests)
     add_subdirectory(terminal)
 
