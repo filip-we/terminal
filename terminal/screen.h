@@ -6,10 +6,10 @@
 
 // These need to be changed if screen rotation is changed.
 #ifndef SCREEN_COLUMNS
-#define SCREEN_COLUMNS 15
+#define SCREEN_COLUMNS 8//15
 #endif
 #ifndef SCREEN_ROWS
-#define SCREEN_ROWS 20
+#define SCREEN_ROWS 8//20
 #endif
 #ifndef SCREEN_BUFFER_NR_OF_ROWS
 #define SCREEN_BUFFER_NR_OF_ROWS 255
@@ -21,20 +21,22 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-void screen_write_char(char ch, uint8_t row, uint8_t col);
-//void screen_write_char_at_cursor(char ch);
-void screen_display_test_image(unsigned char* font_map);
-void screen_update();
-
 static char screen_buffer[SCREEN_BUFFER_NR_OF_ROWS][SCREEN_COLUMNS];
 
 static uint8_t screen_buff_scroll;
-
 
 static struct Cursor {
     uint8_t row;
     uint8_t col;
 } cursor;
 
+void screen_write_char(char ch, uint8_t row, uint8_t col);
+void screen_write_char_at_cursor(
+    char ch,
+    struct Cursor *,
+    char* screen_buffer,
+    uint8_t* screen_buff_scroll);
+void screen_display_test_image(unsigned char* font_map);
+void screen_update();
 
 #endif

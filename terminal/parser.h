@@ -9,7 +9,8 @@
 void parse_byte(
     char ch,
     struct Cursor* cursor,
-    char* screen_buffer);
+    char* screen_buffer,
+    uint8_t* screen_buff_scroll);
 void parser_init();
 
 enum control_codes
