@@ -1,6 +1,7 @@
 #include <stdio.h>
+#include <string.h>
+
 #include "parser.h"
-//#include "screen.h"
 
 int tests_run = 0;
 
@@ -15,21 +16,19 @@ int test_hello_world()
         &cursor,
         *screen_buffer,
         &scroll);
-    _assert( (&screen_buffer) == 'H');
+    _assert( (char) screen_buffer[cursor.row][cursor.col - 1] ==  'H');
 }
 
-int square_01() {
-    int x=5;
-    _assert(x == 25);
+
+int all_tests()
+{
+    test_hello_world();
     return 0;
 }
 
-int all_tests() {
-    _verify(square_01);
-    return 0;
-}
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     int result = all_tests();
     if (result == 0)
         printf("PASSED\n");
