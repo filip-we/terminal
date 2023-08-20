@@ -2,11 +2,11 @@
 rm -r build/*
 
 cmake \
-    -DTARGET_GROUP=test \
+    -DTARGET_GROUP=tests \
     -S . \
     -B build/.
 
 cd build
 make
 
-build/test_runner
+tests/tests
