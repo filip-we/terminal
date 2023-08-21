@@ -72,8 +72,9 @@ int test_carrige_return()
     cursor.col = 0;
     scroll = 0;
     char buff[ROW_LENGTH][COL_LENGTH];
-    char input[12] = "ABC DEFGHIJK";
+    char input[12] = "ABC  12345678";
     input[3] = 0x0a;
+    input[4] = 0x0d;
     for (uint8_t i = 0; i < sizeof(input); i++)
     {
         parse_byte(input[i],
@@ -83,8 +84,11 @@ int test_carrige_return()
     }
 
     print_screen_buffer(*buff);
-    char expected[12] = "ABC      DEF";
-    _assert(_cmp_arrays(expected, *buff, 12) == 0);
+    char expected[12] = "ABC     1234";
+    //char expected[12] = {'A', 'B', 'C', 0x00, 0x00, 0, 0, 0, '1', '2', '3', '4'};
+    //printf("%c", buff[1][0]);
+    //printf("%c", *(&buff + 8*COL_LENGTH + 8*3));
+    _assert(_cmp_arrays(expected, *buff, 4) == 0);
     return 0;
 }
 

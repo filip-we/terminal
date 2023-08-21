@@ -146,11 +146,10 @@ void parse_byte(char ch,
             //}
             //screen_write_char(' ', cursor.row, cursor.col);
         }
+        else if (ch == LF)
+            cursor -> row ++;
         else if (ch == CR)
-        {
-            //cursor_row ++;
-            //cursor_col = 0;
-        }
+            cursor -> col = 0;
         else
         {
             if (ch <= US)
