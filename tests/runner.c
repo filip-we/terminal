@@ -20,19 +20,33 @@ int _cmp_arrays(char a[], char b[], int n)
     uint8_t i;
     for (i = 0; i < n; i++)
     {
+        //printf("%c, %c \n", a[i], b[i]);
         if (a[i] != b[i]) return 1;
     }
+    return 0;
 }
 
 
 void print_screen_buffer(char *buff)
 {
-    char border[ROW_LENGTH] = "========";
+    char border[ROW_LENGTH + 2] = "==========";
     printf("%s \n", border);
     uint8_t row;
     for (row = 0; row < ROW_LENGTH; row ++)
     {
-        printf("|%.*s|\n", ROW_LENGTH, (buff + row * COL_LENGTH));
+        printf("|");
+        for (uint8_t col = 0; col < COL_LENGTH; col++)
+        {
+            if (buff[row * COL_LENGTH + col] >= 0x20)
+            {
+                printf("%c", buff[row * COL_LENGTH + col]);
+            }
+            else
+            {
+                printf(" ");
+            }
+        }
+        printf("|\n");
     }
     printf("%s \n", border);
 }
@@ -46,6 +60,7 @@ int test_hello_world()
         &cursor,
         *buff,
         &scroll);
+    print_screen_buffer(*buff);
     _assert( (char) buff[cursor.row][cursor.col - 1] ==  'H');
     return 0;
 }
@@ -53,25 +68,23 @@ int test_hello_world()
 
 int test_carrige_return()
 {
+    cursor.row = 0;
+    cursor.col = 0;
     scroll = 0;
     char buff[ROW_LENGTH][COL_LENGTH];
-    char input[12] = "ABCDEFG";
-    //input[0] = 0x0a;
-    uint8_t i;
-    //for (i = 0; i < sizeof(input); i++);
-    for (i = 0; i < 12; i++);
-        printf("%i: %c\n", input[i]);
+    char input[12] = "ABC DEFGHIJK";
+    input[3] = 0x0a;
+    for (uint8_t i = 0; i < sizeof(input); i++)
+    {
         parse_byte(input[i],
             &cursor,
             *buff,
             &scroll);
+    }
 
-    //print_screen_buffer(*buff);
-    //printf("%s", *(screen_buffer + ROW_LENGTH));
-    _assert(
-        //(char) strcmp(*(buff + ROW_LENGTH), input) == 0
-        (char) _cmp_arrays(buff, input, 4) == 0
-    );
+    print_screen_buffer(*buff);
+    char expected[12] = "ABC      DEF";
+    _assert(_cmp_arrays(expected, *buff, 12) == 0);
     return 0;
 }
 
