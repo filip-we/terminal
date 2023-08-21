@@ -99,6 +99,7 @@ void screen_update_text(
     uint8_t screen_columns,
     unsigned char* font_map,
     uint8_t screen_buff_scroll);
+void screen_display_test_image(unsigned char* font_map);
 
 
 #endif
