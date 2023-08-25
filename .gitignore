@@ -41,4 +41,4 @@ py_venv/
 **/.pytest_cache
 **/__pycache__
 
-
+rp_pico_mount/
