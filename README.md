@@ -4,3 +4,8 @@ The aim of this project is to build a terminal that can be used in conjuction wi
 
 ## Tests
 You can run a test with `minicom -D /dev/[device-name-of-uart] -S tests/test_01_hello_world.minicom`. The verification is done by manually looking at the screen! :D
+
+
+## Requiremnts
+On Arch you might need drivers for FAT-discs so you can write to the Pico: `sudo pacman -Sy dosfstools`
+
