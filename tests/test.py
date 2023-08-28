@@ -26,3 +26,10 @@ def test_carrige_return(con):
     con.write(b'\r')
     con.write_ascii("Row2")
     con.write(b'\r')
+
+def test_scroll_up(con):
+    con.write_ascii("Row1")
+    con.write_ascii("grabage")
+    con.write(0x1B)
+    con.write_ascii("[D")
+    con.write_ascii("Row2")

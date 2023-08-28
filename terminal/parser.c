@@ -70,9 +70,14 @@ void parse_byte(char ch,
             // Numeric keypad mode
             esc_code_depth = 0;
         }
-        else if (ch == 'D' || ch == 'M')
+        else if (ch == 'D')
         {
-            // Move/ scroll window up one line.
+            advance_scrolling();
+            esc_code_depth = 0;
+        }
+        else if (ch == 'M')
+        {
+            scroll --;
             esc_code_depth = 0;
         }
         else if (ch == 'E')
