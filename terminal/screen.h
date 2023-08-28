@@ -36,6 +36,8 @@ void screen_write_char_at_cursor(
     struct Cursor *,
     char* screen_buffer,
     uint8_t* screen_buff_scroll);
+void increase_cursor(struct Cursor * cursor, uint8_t* scroll);
+void decrease_cursor(struct Cursor * cursor, uint8_t* scroll);
 void screen_update();
 
 #endif

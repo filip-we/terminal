@@ -31,8 +31,12 @@ void screen_write_char_at_cursor(char ch,
     *(screen_buffer +
         ((cursor -> row + *scroll) * SCREEN_COLUMNS) +
         (cursor -> col )) = ch;
-    (*cursor).col ++;
+}
 
+
+void increase_cursor(struct Cursor * cursor, uint8_t* scroll)
+{
+    (*cursor).col ++;
     if (cursor -> col == SCREEN_COLUMNS)
     {
         cursor -> col = 0;
@@ -40,8 +44,25 @@ void screen_write_char_at_cursor(char ch,
         if (cursor -> row == SCREEN_ROWS)
         {
             cursor -> row = SCREEN_ROWS - 1;
-            //advance_scrolling();
             (*scroll) ++;
         }
     }
+}
+
+
+void decrease_cursor(struct Cursor * cursor, uint8_t* scroll)
+{
+    (*cursor).col --;
+    if (cursor -> col == -1)
+    {
+        (*cursor).col = SCREEN_COLUMNS - 1;
+        (*cursor).row --;
+        if (cursor -> row == -1)
+        {
+            (*cursor).row = 0;
+            (*cursor).col = 0;
+        }
+
+    }
+
 }

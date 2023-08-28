@@ -136,20 +136,21 @@ void parse_byte(char ch,
         {
             esc_code_depth = 1;
         }
-        else if (ch == BSPC)
-        {
-            //cursor.col --;
-            //if (cursor.col == -1)
-            //{
-            //    cursor.col = SCREEN_ROWS;
-            //    cursor.row --;
-            //}
-            //screen_write_char(' ', cursor.row, cursor.col);
-        }
         else if (ch == LF)
             cursor -> row ++;
         else if (ch == CR)
             cursor -> col = 0;
+        else if (ch == BS || ch == BSPC)
+        {
+            if (cursor -> col == 0)
+            {
+                cursor -> row --;
+                cursor -> col = SCREEN_COLUMNS - 1;
+            }
+            else
+                cursor -> col --;
+            screen_write_char_at_cursor(0x00, cursor, screen_buffer, scroll);
+        }
         else
         {
             if (ch <= US)
@@ -157,7 +158,7 @@ void parse_byte(char ch,
                 //screen_write_char_at_cursor('!');
             }
             screen_write_char_at_cursor(ch, cursor, screen_buffer, scroll);
-
+            increase_cursor(cursor, scroll);
         }
     }
 }
