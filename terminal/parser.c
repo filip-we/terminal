@@ -37,6 +37,12 @@ void parse_byte(char ch,
         {
             state = CSI_STATE;
         }
+        else if (ch == 'E')
+        {
+            cursor -> row ++;
+            cursor -> col = 0;
+            state = NORMAL_STATE;
+        }
     }
     else if (state == CSI_STATE)
     {
@@ -60,16 +66,7 @@ void call_csi(char ch,
     struct Cursor * cursor,
     char* screen_buffer,
     uint8_t* scroll)
-{
-    if (ch == 'E')
-    {
-        // Move to begining of next line.
-        cursor -> row ++;
-        cursor -> col = 0;
-        esc_code_depth = 0;
-    }
-    state = NORMAL_STATE;
-}
+{}
 
 
 void parse_byte_internally(char ch,
