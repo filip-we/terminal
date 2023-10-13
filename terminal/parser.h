@@ -11,6 +11,11 @@ void parse_byte(
     struct Cursor* cursor,
     char* screen_buffer,
     uint8_t* screen_buff_scroll);
+void parse_byte_internally(
+    char ch,
+    struct Cursor* cursor,
+    char* screen_buffer,
+    uint8_t* screen_buff_scroll);
 void call_csi(
     char ch,
     struct Cursor* cursor,

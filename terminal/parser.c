@@ -18,7 +18,7 @@ bool parse_csi_code()
 }
 
 
-void parse_byte_2(char ch,
+void parse_byte(char ch,
     struct Cursor * cursor,
     char* screen_buffer,
     uint8_t* scroll)
@@ -68,162 +68,38 @@ void call_csi(char ch,
         cursor -> col = 0;
         esc_code_depth = 0;
     }
+    state = NORMAL_STATE;
 }
 
 
-void parse_byte(char ch,
+void parse_byte_internally(char ch,
     struct Cursor * cursor,
     char* screen_buffer,
     uint8_t* scroll)
 {
-    //*(screen_buffer + 40) = '*';
-    //*(screen_buffer + 41 + (*cursor).col) = '!';
-    //(*cursor).col ++;
-    //*(screen_buffer + 42 + (*cursor).col) = '2';
-
-
-    if (esc_code_depth == 1)
+    if (ch == LF) // Note that VT100 does not handle this characters normally I believe
+        cursor -> row ++;
+    else if (ch == CR)
+        cursor -> col = 0;
+    else if (ch == BS || ch == BSPC)
     {
-        if (ch == '[')
+        if (cursor -> col == 0)
         {
-            esc_code_depth ++;
-            esc_seq_buffer[esc_seq_buffer_write] = ch;
-            esc_seq_buffer_write ++;
+            cursor -> row --;
+            cursor -> col = SCREEN_COLUMNS - 1;
         }
         else
-        {
-            esc_code_depth = 0;
-            //screen_write_char_at_cursor(ch);
-        }
-    }
-    else if (esc_code_depth == 2)
-    {
-        if (ch == '#' || ch == '(' || ch == ')' || ch == '[')
-        {
-            esc_code_depth ++;
-            esc_seq_buffer[esc_seq_buffer_write] = ch;
-            esc_seq_buffer_write ++;
-        }
-        else if (ch >= '0' && ch <= '9')
-        {
-            esc_seq_buffer[esc_seq_buffer_write] = ch;
-            esc_seq_buffer_write ++;
-            // Save as a parameter
-        }
-        else if (ch == ';')
-        {
-            // The first parameter was empty. Let's read the second one.
-            esc_code_depth = 5;
-            esc_seq_buffer[esc_seq_buffer_write] = ch;
-            esc_seq_buffer_write ++;
-        }
-        else if (ch == '=')
-        {
-            // Alternate keypad mode
-            esc_code_depth = 0;
-        }
-        else if (ch == '>')
-        {
-            // Numeric keypad mode
-            esc_code_depth = 0;
-        }
-        else if (ch == 'D')
-        {
-            advance_scrolling();
-            esc_code_depth = 0;
-        }
-        else if (ch == 'M')
-        {
-            scroll --;
-            esc_code_depth = 0;
-        }
-        else if (ch == 'E')
-        {
-            // Move to begining of next line.
-            cursor -> row ++;
-            cursor -> col = 0;
-            esc_code_depth = 0;
-        }
-        else if (ch == 'H')
-        {
-            // Set a tab at the current column.
-            esc_code_depth = 0;
-        }
-        else if (ch == 'N')
-        {
-            // Set single shift 2.
-            esc_code_depth = 0;
-        }
-        else if (ch == 'O')
-        {
-            // Set single shift 3.
-            esc_code_depth = 0;
-        }
-        else if (ch == 'c')
-        {
-            //screen_init();
-            esc_code_depth = 0;
-        }
-        else
-        {
-            //screen_write_char_at_cursor(ch);
-            esc_code_depth = 0;
-        }
-    }
-    else if (esc_code_depth == 3)
-    {
-        if (ch == '#') {
-            // Screen related things. Only this char.
-            esc_code_depth = 0;
-        }
-        else if (ch == '(' || ch == ')')
-        {
-            // Font related things. Only this char.
-            esc_code_depth = 0;
-        }
-        else if (ch == '[')
-        {
-            if (!parse_csi_code())
-            {
-                esc_code_depth = 0;
-            }
-        }
-        else
-        {
-            //screen_write_char_at_cursor(ch);
-            esc_code_depth = 0;
-        }
+            cursor -> col --;
+        screen_write_char_at_cursor(0x00, cursor, screen_buffer, scroll);
     }
     else
     {
-        if (ch == ESC)
+        if (ch <= US)
         {
-            esc_code_depth = 1;
+            //screen_write_char_at_cursor('!');
         }
-        else if (ch == LF) // Note that VT100 does not handle this characters normally I believe
-            cursor -> row ++;
-        else if (ch == CR)
-            cursor -> col = 0;
-        else if (ch == BS || ch == BSPC)
-        {
-            if (cursor -> col == 0)
-            {
-                cursor -> row --;
-                cursor -> col = SCREEN_COLUMNS - 1;
-            }
-            else
-                cursor -> col --;
-            screen_write_char_at_cursor(0x00, cursor, screen_buffer, scroll);
-        }
-        else
-        {
-            if (ch <= US)
-            {
-                //screen_write_char_at_cursor('!');
-            }
-            screen_write_char_at_cursor(ch, cursor, screen_buffer, scroll);
-            increase_cursor(cursor, scroll);
-        }
+        screen_write_char_at_cursor(ch, cursor, screen_buffer, scroll);
+        increase_cursor(cursor, scroll);
     }
 }
 
