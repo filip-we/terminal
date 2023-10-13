@@ -82,7 +82,9 @@ void parse_byte(char ch,
         }
         else if (ch == 'E')
         {
-            // Move to next line.
+            // Move to begining of next line.
+            cursor -> row ++;
+            cursor -> col = 0;
             esc_code_depth = 0;
         }
         else if (ch == 'H')
@@ -141,7 +143,7 @@ void parse_byte(char ch,
         {
             esc_code_depth = 1;
         }
-        else if (ch == LF)
+        else if (ch == LF) // Note that VT100 does not handle this characters normally I believe
             cursor -> row ++;
         else if (ch == CR)
             cursor -> col = 0;

@@ -6,10 +6,10 @@
 
 // These need to be changed if screen rotation is changed.
 #ifndef SCREEN_COLUMNS
-#define SCREEN_COLUMNS 8//15
+#define SCREEN_COLUMNS 8
 #endif
 #ifndef SCREEN_ROWS
-#define SCREEN_ROWS 8//20
+#define SCREEN_ROWS 8
 #endif
 #ifndef SCREEN_BUFFER_NR_OF_ROWS
 #define SCREEN_BUFFER_NR_OF_ROWS 255

@@ -3,6 +3,8 @@
 
 #include "parser.h"
 
+#define SCREEN_ROWS 8
+#define SCREEN_COLUMNS 8
 #define ROW_LENGTH 8
 #define COL_LENGTH 8
 
@@ -71,10 +73,11 @@ int test_carrige_return()
     cursor.row = 0;
     cursor.col = 0;
     scroll = 0;
-    char buff[ROW_LENGTH * COL_LENGTH];
-    char input[12] = "ABC  12345";
-    input[3] = 0x0a;
-    input[4] = 0x0d;
+    char buff[ROW_LENGTH * COL_LENGTH] = {0};
+    char input[12] = "ABCD___123456";
+    input[4] = 0x1B;
+    input[5] = '[';
+    input[6] = 'E';
     for (uint8_t i = 0; i < sizeof(input); i++)
     {
         parse_byte(input[i],
@@ -84,9 +87,8 @@ int test_carrige_return()
     }
 
     print_screen_buffer(buff);
-    char expected[12] = {'A', 'B', 'C', 0x00, 0x00, 0, 0, 0, '1', '2', '3', '4'};
-    // printf("%i ", (int) *(buff + 0));
-    _assert(_cmp_arrays(expected, buff, 4) == 0);
+    char expected[12] = {'A', 'B', 'C', 'D', 0, 0, 0, 0, '1', '2', '3', '4'};
+    _assert(_cmp_arrays(expected, buff, 10) == 0);
     return 0;
 }
 
