@@ -74,10 +74,9 @@ int test_carrige_return()
     cursor.col = 0;
     scroll = 0;
     char buff[ROW_LENGTH * COL_LENGTH] = {0};
-    char input[12] = "ABCD___123456";
+    char input[12] = "ABCD__123456";
     input[4] = 0x1B;
-    input[5] = '[';
-    input[6] = 'E';
+    input[5] = 'E';
     for (uint8_t i = 0; i < sizeof(input); i++)
     {
         parse_byte(input[i],
@@ -92,11 +91,35 @@ int test_carrige_return()
     return 0;
 }
 
+int test_set_cursor()
+{
+    cursor.row = 0;
+    cursor.col = 0;
+    scroll = 0;
+    char buff[ROW_LENGTH * COL_LENGTH] = {0};
+    char input[12] = "ABCD__1;0H1234";
+    input[4] = 0x1B;
+    input[5] = '[';
+    for (uint8_t i = 0; i < sizeof(input); i++)
+    {
+        parse_byte(input[i],
+            &cursor,
+            buff,
+            &scroll);
+    }
+    print_screen_buffer(buff);
+    char expected[12] = {'A', 'B', 'C', 'D', 0, 0, 0, 0, '1', '2', '3', '4'};
+    _assert(_cmp_arrays(expected, buff, 10) == 0);
+    return 0;
+
+}
+
 
 int all_tests()
 {
     _verify(test_hello_world);
     _verify(test_carrige_return);
+    _verify(test_set_cursor);
     return 0;
 }
 

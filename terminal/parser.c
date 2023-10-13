@@ -49,12 +49,13 @@ void parse_byte(char ch,
         if (ch == ';' || (ch >= '0' && ch <= '9'))
         {
             // Parse parameter
-            screen_write_char_at_cursor('@', cursor, screen_buffer, scroll);
-            increase_cursor(cursor, scroll);
+            esc_seq_buffer[esc_seq_buffer_write] = ch;
+            esc_seq_buffer_write ++;
         }
         else if (ch >= '?' && ch <= 'z')
             // We got a complete CSI-code
             call_csi(ch, cursor, screen_buffer, scroll);
+            state = NORMAL_STATE;
     }
     else
         // Other states go here...
@@ -66,7 +67,32 @@ void call_csi(char ch,
     struct Cursor * cursor,
     char* screen_buffer,
     uint8_t* scroll)
-{}
+{
+    uint8_t p = 0;
+    uint8_t params[2] = {0};
+    char c;
+    while (true)
+    {
+        c = esc_seq_buffer[esc_seq_buffer_read];
+        esc_seq_buffer[esc_seq_buffer_read] = 0;
+        esc_seq_buffer_read ++;
+        if (c == 0)
+            break;
+        if (c == ';')
+            p ++;
+            if (p > 1)
+                return; // This is an incorrect escape sequence
+            continue;
+        params[p] += (c - '0');
+
+    }
+    if (ch == 'H')
+    {
+        cursor -> row = params[0];
+        cursor -> col = params[1];
+    }
+
+}
 
 
 void parse_byte_internally(char ch,
