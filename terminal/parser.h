@@ -11,6 +11,11 @@ void parse_byte(
     struct Cursor* cursor,
     char* screen_buffer,
     uint8_t* screen_buff_scroll);
+void call_csi(
+    char ch,
+    struct Cursor* cursor,
+    char* screen_buffer,
+    uint8_t* screen_buff_scroll);
 void parser_init();
 
 enum control_codes
@@ -47,6 +52,11 @@ enum control_codes
     GS,
     RS,
     US,
+};
+
+enum parser_states
+{
+    NORMAL_STATE, ESC_STATE, CSI_STATE, HASH_STATE, G0SET, G1SET,
 };
 
 enum states

@@ -6,6 +6,7 @@ uint8_t esc_seq_buffer_write;
 uint8_t esc_seq_buffer_read;
 uint8_t esc_code_depth;
 uint8_t code_group;
+uint8_t state;
 
 bool parse_csi_code()
 {
@@ -14,6 +15,59 @@ bool parse_csi_code()
         return false;
     }
     return true;
+}
+
+
+void parse_byte_2(char ch,
+    struct Cursor * cursor,
+    char* screen_buffer,
+    uint8_t* scroll)
+{
+    if (state == NORMAL_STATE)
+    {
+        if (ch == ESC)
+            state = ESC_STATE;
+        else
+            screen_write_char_at_cursor(ch, cursor, screen_buffer, scroll);
+            increase_cursor(cursor, scroll);
+    }
+    else if (state == ESC_STATE)
+    {
+        if (ch == '[')
+        {
+            state = CSI_STATE;
+        }
+    }
+    else if (state == CSI_STATE)
+    {
+        if (ch == ';' || (ch >= '0' && ch <= '9'))
+        {
+            // Parse parameter
+            screen_write_char_at_cursor('@', cursor, screen_buffer, scroll);
+            increase_cursor(cursor, scroll);
+        }
+        else if (ch >= '?' && ch <= 'z')
+            // We got a complete CSI-code
+            call_csi(ch, cursor, screen_buffer, scroll);
+    }
+    else
+        // Other states go here...
+        state = NORMAL_STATE;
+}
+
+
+void call_csi(char ch,
+    struct Cursor * cursor,
+    char* screen_buffer,
+    uint8_t* scroll)
+{
+    if (ch == 'E')
+    {
+        // Move to begining of next line.
+        cursor -> row ++;
+        cursor -> col = 0;
+        esc_code_depth = 0;
+    }
 }
 
 
@@ -44,21 +98,24 @@ void parse_byte(char ch,
     }
     else if (esc_code_depth == 2)
     {
-        if (ch == '#' || ch == '(' || ch == ')' || ch == '[' || ch == '5' || ch == '6')
+        if (ch == '#' || ch == '(' || ch == ')' || ch == '[')
         {
             esc_code_depth ++;
             esc_seq_buffer[esc_seq_buffer_write] = ch;
             esc_seq_buffer_write ++;
         }
-        else if (ch == '7')
+        else if (ch >= '0' && ch <= '9')
         {
-            // Save cursor.
-            esc_code_depth = 0;
+            esc_seq_buffer[esc_seq_buffer_write] = ch;
+            esc_seq_buffer_write ++;
+            // Save as a parameter
         }
-        else if (ch == '8')
+        else if (ch == ';')
         {
-            // Restore cursor.
-            esc_code_depth = 0;
+            // The first parameter was empty. Let's read the second one.
+            esc_code_depth = 5;
+            esc_seq_buffer[esc_seq_buffer_write] = ch;
+            esc_seq_buffer_write ++;
         }
         else if (ch == '=')
         {
@@ -176,4 +233,5 @@ void parser_init()
     esc_seq_buffer_read = 0;
     esc_code_depth = 0;
     code_group = CODE_GROUP_NORMAL;
+    state = NORMAL_STATE;
 }
