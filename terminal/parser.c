@@ -2,6 +2,11 @@
 #include <stdlib.h>
 // #include <stdio.h>
 
+#define SET_CURSOR(cursor, r, c) {\
+    cursor -> row = r;\
+    cursor -> col = c;\
+}
+
 
 char esc_seq_buffer[256];
 uint8_t esc_seq_buffer_write;
@@ -97,14 +102,13 @@ void call_csi(char ch,
     }
     int p0 = atoi(esc_seq_buffer + esc_seq_buffer_read);
     int p1 = atoi(esc_seq_buffer + i + 1);
+    esc_seq_buffer_read = esc_seq_buffer_write;
     // printf("got params %d, %d\n", p0, p1);
 
-    if (ch == 'H')
+    if (ch == 'H' || ch == 'f')
     {
         // printf("Parsing ^[p;pH with p being %d, %d\n", p0, p1);
-        cursor -> row = p0;
-        cursor -> col = p1;
-        // printf("done settings curosr\n");
+        SET_CURSOR(cursor, p0, p1);
     }
 }
 
