@@ -3,10 +3,8 @@
 
 #include "parser.h"
 
-#define SCREEN_ROWS 8
-#define SCREEN_COLUMNS 8
-#define ROW_LENGTH 8
-#define COL_LENGTH 8
+#define SCREEN_ROWS 12
+#define SCREEN_COLUMNS 12
 
 int tests_run = 0;
 
@@ -17,7 +15,7 @@ int tests_run = 0;
 uint8_t scroll;
 
 
-int _cmp_arrays(char a[], char b[], int n)
+int _cmp_arrays(char* a, char* b, int n)
 {
     uint8_t i;
     for (i = 0; i < n; i++)
@@ -31,17 +29,17 @@ int _cmp_arrays(char a[], char b[], int n)
 
 void print_screen_buffer(char *buff)
 {
-    char border[ROW_LENGTH + 2] = "==========";
+    char border[SCREEN_ROWS + 2] = "==============";
     printf("%s \n", border);
     uint8_t row;
-    for (row = 0; row < ROW_LENGTH; row ++)
+    for (row = 0; row < SCREEN_COLUMNS; row ++)
     {
         printf("|");
-        for (uint8_t col = 0; col < COL_LENGTH; col++)
+        for (uint8_t col = 0; col < SCREEN_COLUMNS; col++)
         {
-            if (buff[row * COL_LENGTH + col] >= 0x20)
+            if (buff[row * SCREEN_COLUMNS + col] >= 0x20)
             {
-                printf("%c", buff[row * COL_LENGTH + col]);
+                printf("%c", buff[row * SCREEN_COLUMNS + col]);
             }
             else
             {
@@ -57,7 +55,7 @@ void print_screen_buffer(char *buff)
 int test_hello_world()
 {
     scroll = 0;
-    char buff[ROW_LENGTH][COL_LENGTH];
+    char buff[SCREEN_ROWS][SCREEN_COLUMNS];
     parse_byte('H',
         &cursor,
         *buff,
@@ -73,7 +71,7 @@ int test_carrige_return()
     cursor.row = 0;
     cursor.col = 0;
     scroll = 0;
-    char buff[ROW_LENGTH * COL_LENGTH] = {0};
+    char buff[SCREEN_ROWS * SCREEN_COLUMNS] = {0};
     char input[12] = "ABCD__123456";
     input[4] = 0x1B;
     input[5] = 'E';
@@ -96,10 +94,9 @@ int test_set_cursor()
     cursor.row = 0;
     cursor.col = 0;
     scroll = 0;
-    char buff[ROW_LENGTH * COL_LENGTH] = {0};
-    char input[12] = "ABCD__1;0H1234";
-    input[4] = 0x1B;
-    input[5] = '[';
+    char buff[SCREEN_ROWS * SCREEN_COLUMNS] = {0};
+    char input[16] = "_[0;10H1234";
+    input[0] = 0x1B;
     for (uint8_t i = 0; i < sizeof(input); i++)
     {
         parse_byte(input[i],
@@ -108,10 +105,9 @@ int test_set_cursor()
             &scroll);
     }
     print_screen_buffer(buff);
-    char expected[12] = {'A', 'B', 'C', 'D', 0, 0, 0, 0, '1', '2', '3', '4'};
-    _assert(_cmp_arrays(expected, buff, 10) == 0);
+    char expected[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '1', '2', '3', '4', 0, 0, 0};
+    _assert(_cmp_arrays(&expected , &buff, 10) == 0);
     return 0;
-
 }
 
 

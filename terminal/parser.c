@@ -1,4 +1,6 @@
 #include "parser.h"
+#include <stdlib.h>
+// #include <stdio.h>
 
 
 char esc_seq_buffer[256];
@@ -23,6 +25,7 @@ void parse_byte(char ch,
     char* screen_buffer,
     uint8_t* scroll)
 {
+    // printf("starting parse bytes");
     if (state == NORMAL_STATE)
     {
         if (ch == ESC)
@@ -36,6 +39,7 @@ void parse_byte(char ch,
         if (ch == '[')
         {
             state = CSI_STATE;
+            // printf("setting csi-state\n");
         }
         else if (ch == 'E')
         {
@@ -46,6 +50,7 @@ void parse_byte(char ch,
     }
     else if (state == CSI_STATE)
     {
+        // printf("parsing csi-state for %c\n", ch);
         if (ch == ';' || (ch >= '0' && ch <= '9'))
         {
             // Parse parameter
@@ -53,9 +58,15 @@ void parse_byte(char ch,
             esc_seq_buffer_write ++;
         }
         else if (ch >= '?' && ch <= 'z')
+        {
             // We got a complete CSI-code
             call_csi(ch, cursor, screen_buffer, scroll);
             state = NORMAL_STATE;
+        }
+        else
+        {
+            state = NORMAL_STATE;
+        }
     }
     else
         // Other states go here...
@@ -68,30 +79,33 @@ void call_csi(char ch,
     char* screen_buffer,
     uint8_t* scroll)
 {
-    uint8_t p = 0;
-    uint8_t params[2] = {0};
-    char c;
+    uint8_t i = esc_seq_buffer_read;
+
+    //uint8_t p = 0;
+    //uint8_t params[2] = {0};
+    //char c;
+    // printf("call_csi\n");
     while (true)
     {
-        c = esc_seq_buffer[esc_seq_buffer_read];
-        esc_seq_buffer[esc_seq_buffer_read] = 0;
-        esc_seq_buffer_read ++;
-        if (c == 0)
+        if (esc_seq_buffer[i] == ';')
+        {
             break;
-        if (c == ';')
-            p ++;
-            if (p > 1)
-                return; // This is an incorrect escape sequence
-            continue;
-        params[p] += (c - '0');
-
+        }
+        if (i > 100)
+            return;
+        i ++;
     }
+    int p0 = atoi(esc_seq_buffer + esc_seq_buffer_read);
+    int p1 = atoi(esc_seq_buffer + i + 1);
+    // printf("got params %d, %d\n", p0, p1);
+
     if (ch == 'H')
     {
-        cursor -> row = params[0];
-        cursor -> col = params[1];
+        // printf("Parsing ^[p;pH with p being %d, %d\n", p0, p1);
+        cursor -> row = p0;
+        cursor -> col = p1;
+        // printf("done settings curosr\n");
     }
-
 }
 
 
