@@ -1,10 +1,11 @@
+#define SCREEN_ROWS 12
+#define SCREEN_COLUMNS 12
+
 #include <stdio.h>
 #include <string.h>
 
 #include "parser.h"
 
-#define SCREEN_ROWS 12
-#define SCREEN_COLUMNS 12
 
 int tests_run = 0;
 
@@ -84,7 +85,7 @@ int test_carrige_return()
     }
 
     print_screen_buffer(buff);
-    char expected[12] = {'A', 'B', 'C', 'D', 0, 0, 0, 0, '1', '2', '3', '4'};
+    char expected[32] = {'A', 'B', 'C', 'D', 0, 0, 0, 0, 0, 0, 0, 0, '1', '2', '3', '4'};
     _assert(_cmp_arrays(expected, buff, 10) == 0);
     return 0;
 }
@@ -105,8 +106,8 @@ int test_set_cursor()
             &scroll);
     }
     print_screen_buffer(buff);
-    char expected[16] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '1', '2', '3', '4', 0, 0, 0};
-    _assert(_cmp_arrays(&expected , &buff, 10) == 0);
+    char expected[18] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '1', '2', '3', '4', 0, 0, 0};
+    _assert(_cmp_arrays(expected , buff, 10) == 0);
     return 0;
 }
 

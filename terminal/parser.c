@@ -48,7 +48,7 @@ void parse_byte(char ch,
         }
         else if (ch == 'E')
         {
-            cursor -> row ++;
+            cursor_down(cursor, scroll, 1);
             cursor -> col = 0;
             state = NORMAL_STATE;
         }
@@ -103,9 +103,18 @@ void call_csi(char ch,
     int p0 = atoi(esc_seq_buffer + esc_seq_buffer_read);
     int p1 = atoi(esc_seq_buffer + i + 1);
     esc_seq_buffer_read = esc_seq_buffer_write;
+
     // printf("got params %d, %d\n", p0, p1);
 
-    if (ch == 'H' || ch == 'f')
+    if (ch = 'A')
+        cursor_up(cursor, scroll, p0);
+    else if (ch = 'B')
+        cursor_down(cursor, scroll, p0);
+    else if (ch = 'C')
+        cursor_right(cursor, scroll, p0);
+    else if (ch = 'D')
+        cursor_left(cursor, scroll, p0);
+    else if (ch == 'H' || ch == 'f')
     {
         // printf("Parsing ^[p;pH with p being %d, %d\n", p0, p1);
         SET_CURSOR(cursor, p0, p1);

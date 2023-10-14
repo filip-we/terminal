@@ -66,3 +66,42 @@ void decrease_cursor(struct Cursor * cursor, uint8_t* scroll)
     }
 
 }
+
+
+void cursor_up(struct Cursor * cursor, uint8_t* scroll, uint8_t lines)
+{
+    if ( lines == 0 )
+        lines = 1;
+    (*cursor).row -= lines;
+    if ( (*cursor).row >= SCREEN_ROWS )
+        (*cursor).row = SCREEN_ROWS;
+    if ( (*cursor).row < 0 )
+        (*cursor).row = 0;
+}
+
+
+void cursor_down(struct Cursor * cursor, uint8_t* scroll, uint8_t lines)
+{
+    if ( lines == 0 )
+        lines = 1;
+    cursor_up(cursor, scroll, lines);
+}
+
+
+void cursor_right(struct Cursor * cursor, uint8_t* scroll, uint8_t lines)
+{
+    if ( lines == 0 )
+        lines = 1;
+    (*cursor).row += lines;
+    if ( (*cursor).row > SCREEN_ROWS )
+        (*cursor).row = SCREEN_ROWS;
+    if ( (*cursor).row < 0 )
+        (*cursor).row = 0;
+}
+
+void cursor_left(struct Cursor * cursor, uint8_t* scroll, uint8_t lines)
+{
+    if ( lines == 0 )
+        lines = 1;
+     cursor_right(cursor, scroll, -lines);
+}
