@@ -16,6 +16,14 @@ int tests_run = 0;
 uint8_t scroll;
 
 
+void _init_test()
+{
+    cursor.row = 0;
+    cursor.col = 0;
+    scroll = 0;
+}
+
+
 int _cmp_arrays(char* a, char* b, int n)
 {
     uint8_t i;
@@ -38,13 +46,15 @@ void print_screen_buffer(char *buff)
         printf("|");
         for (uint8_t col = 0; col < SCREEN_COLUMNS; col++)
         {
-            if (buff[row * SCREEN_COLUMNS + col] >= 0x20)
+            if (buff[row * SCREEN_COLUMNS + col] >= 0x20 )
             {
                 printf("%c", buff[row * SCREEN_COLUMNS + col]);
             }
+            else if (buff[row * SCREEN_COLUMNS + col] == 0)
+                printf(" ");
             else
             {
-                printf(" ");
+                printf("!");
             }
         }
         printf("|\n");
@@ -112,11 +122,38 @@ int test_set_cursor()
 }
 
 
+int test_clear_screen()
+{
+    cursor.row = 1;
+    cursor.col = 1;
+    scroll = 0;
+    char buff[SCREEN_ROWS * SCREEN_COLUMNS] = {
+        'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A',
+        'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A',
+        'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A'
+    };
+    char input[5] = "_[0J";
+    input[0] = 0x1B;
+    for (uint8_t i = 0; i < sizeof(input); i++)
+    {
+        parse_byte(input[i],
+            &cursor,
+            buff,
+            &scroll);
+    }
+    print_screen_buffer(buff);
+    char expected[18] = {'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', \
+        'A', ' ', ' ', ' ', ' ', ' ', 'A', 'A', 'A'};
+    _assert(_cmp_arrays(expected , buff, 18) == 0);
+    return 0;
+}
+
 int all_tests()
 {
     _verify(test_hello_world);
     _verify(test_carrige_return);
     _verify(test_set_cursor);
+    _verify(test_clear_screen);
     return 0;
 }
 

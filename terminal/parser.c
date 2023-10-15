@@ -1,6 +1,6 @@
 #include "parser.h"
 #include <stdlib.h>
-// #include <stdio.h>
+#include <stdio.h>
 
 #define SET_CURSOR(cursor, r, c) {\
     cursor -> row = r;\
@@ -76,6 +76,7 @@ void parse_byte(char ch,
     else
         // Other states go here...
         state = NORMAL_STATE;
+    printf("buf-read and write is %d, %d\n", esc_seq_buffer_read, esc_seq_buffer_write);
 }
 
 
@@ -85,24 +86,37 @@ void call_csi(char ch,
     uint8_t* scroll)
 {
     uint8_t i = esc_seq_buffer_read;
-
+    int p0;
+    int p1;
     //uint8_t p = 0;
     //uint8_t params[2] = {0};
     //char c;
-    // printf("call_csi\n");
-    while (true)
+    printf("call_csi with char %c\n", ch);
+    if (esc_seq_buffer_write - esc_seq_buffer_read >1)
     {
-        if (esc_seq_buffer[i] == ';')
+        while (true)
         {
-            break;
+            if (esc_seq_buffer[i] == ';')
+                break;
+            else if (esc_seq_buffer[i] == ch)
+                break;
+            if (i > 100)
+            {
+                printf("not good, %d\n", esc_seq_buffer_read);
+                return;
+            }
+            i ++;
         }
-        if (i > 100)
-            return;
-        i ++;
+        p0 = atoi(esc_seq_buffer + esc_seq_buffer_read);
+        p1 = atoi(esc_seq_buffer + i + 1);
+        esc_seq_buffer_read = esc_seq_buffer_write;
     }
-    int p0 = atoi(esc_seq_buffer + esc_seq_buffer_read);
-    int p1 = atoi(esc_seq_buffer + i + 1);
-    esc_seq_buffer_read = esc_seq_buffer_write;
+    else
+    {
+        printf("else %c\n", ch);
+        p0 = 0;
+        p1 = 0;
+    }
 
     // printf("got params %d, %d\n", p0, p1);
 
@@ -118,6 +132,11 @@ void call_csi(char ch,
     {
         // printf("Parsing ^[p;pH with p being %d, %d\n", p0, p1);
         SET_CURSOR(cursor, p0, p1);
+    }
+    else if (ch == 'J')
+    {
+        printf("char is J, p is %d\n", p0);
+        clear_screen(cursor, p0);
     }
 }
 

@@ -99,9 +99,19 @@ void cursor_right(struct Cursor * cursor, uint8_t* scroll, uint8_t lines)
         (*cursor).row = 0;
 }
 
-void cursor_left(struct Cursor * cursor, uint8_t* scroll, uint8_t lines)
+void clear_screen(struct Cursor * cursor, uint8_t p)
 {
-    if ( lines == 0 )
-        lines = 1;
-     cursor_right(cursor, scroll, -lines);
+    if (p == 0)
+    {
+        for (int c = cursor -> col; c < SCREEN_COLUMNS; c ++)
+                screen_buffer[cursor -> row][c] = ' ';
+
+        for (int r = (cursor -> row + 1); r < SCREEN_ROWS; r ++)
+        {
+            for (int c = 0; c < SCREEN_COLUMNS; c ++)
+            {
+                screen_buffer[r][c] = ' ';
+            }
+        }
+    }
 }
