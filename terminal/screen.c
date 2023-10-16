@@ -88,29 +88,43 @@ void cursor_down(struct Cursor * cursor, uint8_t* scroll, uint8_t lines)
 }
 
 
-void cursor_right(struct Cursor * cursor, uint8_t* scroll, uint8_t lines)
+void cursor_right(struct Cursor * cursor, uint8_t* scroll, uint8_t rows)
 {
-    if ( lines == 0 )
-        lines = 1;
-    (*cursor).row += lines;
+    if ( rows == 0 )
+        rows = 1;
+    (*cursor).row += rows;
     if ( (*cursor).row > SCREEN_ROWS )
         (*cursor).row = SCREEN_ROWS;
     if ( (*cursor).row < 0 )
         (*cursor).row = 0;
 }
 
-void clear_screen(struct Cursor * cursor, uint8_t p)
+
+void cursor_left(struct Cursor * cursor, uint8_t* scroll, uint8_t rows)
+{
+    if (rows == 0)
+        rows = 1;
+    cursor_right(cursor, scroll, -rows);
+}
+
+
+void clear_screen(struct Cursor * cursor, char* screen_buffer, uint8_t p)
 {
     if (p == 0)
     {
-        for (int c = cursor -> col; c < SCREEN_COLUMNS; c ++)
-                screen_buffer[cursor -> row][c] = ' ';
+        for (int c = cursor -> col; c < SCREEN_COLUMNS; c++)
+        {
+            *(screen_buffer +
+                ((cursor -> row + screen_buff_scroll) * SCREEN_COLUMNS) +
+                c) = ' ';
 
-        for (int r = (cursor -> row + 1); r < SCREEN_ROWS; r ++)
+        }
+
+        for (int r = (cursor -> row + screen_buff_scroll + 1); r < SCREEN_ROWS; r++)
         {
             for (int c = 0; c < SCREEN_COLUMNS; c ++)
             {
-                screen_buffer[r][c] = ' ';
+                *(screen_buffer + r * SCREEN_COLUMNS + c) = ' ';
             }
         }
     }

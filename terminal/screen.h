@@ -40,9 +40,9 @@ void increase_cursor(struct Cursor * cursor, uint8_t* scroll);
 void decrease_cursor(struct Cursor * cursor, uint8_t* scroll);
 void cursor_up(struct Cursor * cursor, uint8_t* scroll, uint8_t lines);
 void cursor_down(struct Cursor * cursor, uint8_t* scroll, uint8_t lines);
-void cursor_right(struct Cursor * cursor, uint8_t* scroll, uint8_t lines);
-void cursor_down(struct Cursor * cursor, uint8_t* scroll, uint8_t lines);
-void clear_screen(struct Cursor * cursor, uint8_t p);
+void cursor_right(struct Cursor * cursor, uint8_t* scroll, uint8_t rows);
+void cursor_left(struct Cursor * cursor, uint8_t* scroll, uint8_t rows);
+void clear_screen(struct Cursor * cursor, char* screen_buffer, uint8_t p);
 void screen_update();
 
 #endif

@@ -120,13 +120,13 @@ void call_csi(char ch,
 
     // printf("got params %d, %d\n", p0, p1);
 
-    if (ch = 'A')
+    if (ch == 'A')
         cursor_up(cursor, scroll, p0);
-    else if (ch = 'B')
+    else if (ch == 'B')
         cursor_down(cursor, scroll, p0);
-    else if (ch = 'C')
+    else if (ch == 'C')
         cursor_right(cursor, scroll, p0);
-    else if (ch = 'D')
+    else if (ch == 'D')
         cursor_left(cursor, scroll, p0);
     else if (ch == 'H' || ch == 'f')
     {
@@ -136,7 +136,7 @@ void call_csi(char ch,
     else if (ch == 'J')
     {
         printf("char is J, p is %d\n", p0);
-        clear_screen(cursor, p0);
+        clear_screen(cursor, screen_buffer, p0);
     }
 }
 
