@@ -108,16 +108,16 @@ void cursor_left(struct Cursor * cursor, uint8_t* scroll, uint8_t rows)
 }
 
 
-void clear_screen(struct Cursor * cursor, char* screen_buffer, uint8_t p)
+void clear_screen(struct Cursor * cursor, uint8_t* scroll, char* screen_buffer, uint8_t p)
 {
+    // SCREEN_COLUMNS is defined in screen.h and not in tests/runner.c as I thought.
     if (p == 0)
     {
         for (int c = cursor -> col; c < SCREEN_COLUMNS; c++)
         {
             *(screen_buffer +
-                ((cursor -> row + screen_buff_scroll) * SCREEN_COLUMNS) +
-                c) = ' ';
-
+                    ((cursor -> row + *scroll) * SCREEN_COLUMNS) +
+                    c) = ' ';
         }
 
         for (int r = (cursor -> row + screen_buff_scroll + 1); r < SCREEN_ROWS; r++)

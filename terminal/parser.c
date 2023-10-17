@@ -136,7 +136,7 @@ void call_csi(char ch,
     else if (ch == 'J')
     {
         printf("char is J, p is %d\n", p0);
-        clear_screen(cursor, screen_buffer, p0);
+        clear_screen(cursor, scroll, screen_buffer, p0);
     }
 }
 

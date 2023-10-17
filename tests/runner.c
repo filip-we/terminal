@@ -124,15 +124,16 @@ int test_set_cursor()
 
 int test_clear_screen()
 {
-    cursor.row = 1;
-    cursor.col = 1;
-    scroll = 0;
     char buff[SCREEN_ROWS * SCREEN_COLUMNS] = {
-        'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A',
+        '1', '2', '3', '4',  '5', '6', '7', '8',  'A', 'B', 'C', 'D',
         'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A',
         'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A'
     };
-    char input[5] = "_[0J";
+    print_screen_buffer(buff);
+    cursor.row = 0;
+    cursor.col = 1;
+    scroll = 0;
+    char input[4] = "_[0J";
     input[0] = 0x1B;
     for (uint8_t i = 0; i < sizeof(input); i++)
     {
@@ -142,8 +143,9 @@ int test_clear_screen()
             &scroll);
     }
     print_screen_buffer(buff);
-    char expected[18] = {'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', \
-        'A', ' ', ' ', ' ', ' ', ' ', 'A', 'A', 'A'};
+    char expected[18] = {
+        'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A',
+        'A', ' ', ' ', ' ',  ' ', ' ', ' ', ' ', ' '};
     _assert(_cmp_arrays(expected , buff, 18) == 0);
     return 0;
 }
