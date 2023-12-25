@@ -65,6 +65,9 @@ void parse_byte(char ch,
         else if (ch >= '?' && ch <= 'z')
         {
             // We got a complete CSI-code
+            esc_seq_buffer[esc_seq_buffer_write] = ch;
+            esc_seq_buffer_write ++;
+
             call_csi(ch, cursor, screen_buffer, scroll);
             state = NORMAL_STATE;
         }
@@ -92,15 +95,16 @@ void call_csi(char ch,
     //uint8_t params[2] = {0};
     //char c;
     printf("call_csi with char %c\n", ch);
-    if (esc_seq_buffer_write - esc_seq_buffer_read >1)
+    if (esc_seq_buffer_write - esc_seq_buffer_read > 0)
     {
         while (true)
         {
+            printf("i %d, char %c\n", i, esc_seq_buffer[i]);
             if (esc_seq_buffer[i] == ';')
                 break;
             else if (esc_seq_buffer[i] == ch)
                 break;
-            if (i > 100)
+            if (i > esc_seq_buffer_write)
             {
                 printf("not good, %d\n", esc_seq_buffer_read);
                 return;
