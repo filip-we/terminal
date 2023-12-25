@@ -30,21 +30,24 @@ void parse_byte(char ch,
     char* screen_buffer,
     uint8_t* scroll)
 {
-    // printf("starting parse bytes");
+    // printf("parse byte %c (%d), with cursor %d;%d\n", ch, ch, cursor -> row, cursor -> col);
     if (state == NORMAL_STATE)
     {
         if (ch == ESC)
+        {
             state = ESC_STATE;
+        }
         else
+        {
             screen_write_char_at_cursor(ch, cursor, screen_buffer, scroll);
             increase_cursor(cursor, scroll);
+        }
     }
     else if (state == ESC_STATE)
     {
         if (ch == '[')
         {
             state = CSI_STATE;
-            // printf("setting csi-state\n");
         }
         else if (ch == 'E')
         {
@@ -55,7 +58,6 @@ void parse_byte(char ch,
     }
     else if (state == CSI_STATE)
     {
-        // printf("parsing csi-state for %c\n", ch);
         if (ch == ';' || (ch >= '0' && ch <= '9'))
         {
             // Parse parameter
@@ -79,7 +81,7 @@ void parse_byte(char ch,
     else
         // Other states go here...
         state = NORMAL_STATE;
-    printf("buf-read and write is %d, %d\n", esc_seq_buffer_read, esc_seq_buffer_write);
+    // printf("buf-read and write is %d, %d. Cursor is %d;%d\n\n", esc_seq_buffer_read, esc_seq_buffer_write, cursor -> row, cursor -> col);
 }
 
 
@@ -95,6 +97,7 @@ void call_csi(char ch,
     //uint8_t params[2] = {0};
     //char c;
     printf("call_csi with char %c\n", ch);
+    printf("%d, %d, %d, %d, %d\n", esc_seq_buffer[i+0], esc_seq_buffer[i+1], esc_seq_buffer[i+2], esc_seq_buffer[i+3], esc_seq_buffer[i+4]);
     if (esc_seq_buffer_write - esc_seq_buffer_read > 0)
     {
         while (true)

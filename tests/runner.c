@@ -131,7 +131,7 @@ int test_clear_screen()
     };
     print_screen_buffer(buff);
     cursor.row = 0;
-    cursor.col = 1;
+    cursor.col = 2;
     scroll = 0;
     char input[4] = "_[0J";
     input[0] = 0x1B;
@@ -144,8 +144,11 @@ int test_clear_screen()
     }
     print_screen_buffer(buff);
     char expected[18] = {
-        'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A',  'A', 'A', 'A', 'A',
-        'A', ' ', ' ', ' ',  ' ', ' ', ' ', ' ', ' '};
+        '1', '2', ' ', ' ',  ' ', ' ', ' ', ' ',  ' ', ' ', ' ', ' ',
+        ' ', ' ', ' ', ' ',  ' ', ' ', ' ', ' ',  ' ', ' ', ' ', ' ',
+        ' ', ' ', ' ', ' ',  ' ', ' ', ' ', ' ',  ' ', ' ', ' ', ' ',
+        ' ', ' ', ' ', ' ',  ' ', ' ', ' ', ' ',  ' ', ' ', ' ', ' '
+    };
     _assert(_cmp_arrays(expected , buff, 18) == 0);
     return 0;
 }
